@@ -247,8 +247,8 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
   text-transform: uppercase;
   color: var(--accent);
 }
-.statusbar .swap {
-  margin-left: auto;
+.statusbar .swap,
+.statusbar .do-kalendarza {
   font: inherit;
   font-size: 13.5px;
   background: none;
@@ -257,8 +257,13 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
   padding: 5px 14px;
   color: var(--ink-2);
   cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
 }
-.statusbar .swap:hover { border-color: var(--accent); color: var(--accent); }
+.statusbar .swap { margin-left: auto; }
+.statusbar .swap:hover,
+.statusbar .do-kalendarza:hover { border-color: var(--accent); color: var(--accent); }
+.statusbar .do-kalendarza { border-color: var(--accent); color: var(--accent); }
 
 /* ============================================================
    SEKCJE — numerowany ciąg kroków (to naprawdę jest sekwencja)
@@ -629,6 +634,7 @@ body[data-mode] .no-mode-yet { display: none; }
     <div class="shell statusbar-inner">
       <span class="now" id="statusNow">&mdash;</span>
       <button class="swap" id="swapBtn">Zmień ścieżkę</button>
+      <a class="do-kalendarza" href="kalendarz.html">Kalendarz siewu i zbiorów →</a>
     </div>
   </div>
 </section>
@@ -1212,6 +1218,10 @@ body[data-mode] .no-mode-yet { display: none; }
       </div>
 
       <div class="months" id="months"></div>
+
+      <div class="note" style="margin-top: 10px;">
+        <strong>To jest wersja skrócona.</strong> Pełny kalendarz &mdash; 37 upraw w rozdzielczości pół miesiąca, z osobnymi pasmami dla siewu pod osłoną, siewu wprost, przesadzania i zbioru &mdash; jest na <a href="kalendarz.html">osobnej stronie</a>. Możesz tam też zapisywać, co i kiedy faktycznie posiałaś; strona wyliczy szacowany termin zbioru.
+      </div>
     </div>
   </div>
 </section>

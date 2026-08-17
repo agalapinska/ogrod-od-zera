@@ -1,0 +1,1157 @@
+<title>Kalendarz ogrodnika</title>
+
+<style>
+:root {
+  --paper:    #EDEEE7;
+  --paper-2:  #F7F8F3;
+  --paper-3:  #E3E5DB;
+  --ink:      #191E14;
+  --ink-2:    #454D3E;
+  --muted:    #737B69;
+  --rule:     #D0D4C6;
+  --rule-2:   #BFC4B3;
+
+  --leaf:     #3D6B31;
+  --leaf-soft:#E0E8DA;
+  --enamel:   #235B76;
+  --enamel-soft:#DBE6EB;
+
+  /* kolory czynności — stały zestaw semantyczny, niezależny od akcentu */
+  --a-oslona:  #6F55A0;
+  --a-wprost:  #3D6B31;
+  --a-przesad: #235B76;
+  --a-zbior:   #96671A;
+  --a-oslona-t:  #EAE3F4;
+  --a-wprost-t:  #E0E8DA;
+  --a-przesad-t: #DBE6EB;
+  --a-zbior-t:   #F0E7D4;
+
+  --dzis: #B23A2E;
+
+  --display: "Superclarendon", "Rockwell", "Bookman Old Style", Georgia, "Times New Roman", serif;
+  --body: "Optima", "Avenir Next", "Gill Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --accent: var(--leaf);
+  --accent-soft: var(--leaf-soft);
+  --shell: 1240px;
+  --nazwa-w: 186px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #13160F; --paper-2: #1B1F16; --paper-3: #232819;
+    --ink: #E9ECE1; --ink-2: #BCC2B0; --muted: #8B9380;
+    --rule: #2E3427; --rule-2: #3D4534;
+    --leaf: #93C57A; --leaf-soft: #212E1B;
+    --enamel: #7CB9D2; --enamel-soft: #152730;
+    --a-oslona: #B49AD4; --a-wprost: #93C57A; --a-przesad: #7CB9D2; --a-zbior: #DCAC52;
+    --a-oslona-t: #241D33; --a-wprost-t: #1D2A18; --a-przesad-t: #14262F; --a-zbior-t: #2C2413;
+    --dzis: #E8705F;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #13160F; --paper-2: #1B1F16; --paper-3: #232819;
+  --ink: #E9ECE1; --ink-2: #BCC2B0; --muted: #8B9380;
+  --rule: #2E3427; --rule-2: #3D4534;
+  --leaf: #93C57A; --leaf-soft: #212E1B;
+  --enamel: #7CB9D2; --enamel-soft: #152730;
+  --a-oslona: #B49AD4; --a-wprost: #93C57A; --a-przesad: #7CB9D2; --a-zbior: #DCAC52;
+  --a-oslona-t: #241D33; --a-wprost-t: #1D2A18; --a-przesad-t: #14262F; --a-zbior-t: #2C2413;
+  --dzis: #E8705F;
+}
+
+body[data-mode="balkon"] { --accent: var(--enamel); --accent-soft: var(--enamel-soft); }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; line-height: 1.15; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+.shell { max-width: var(--shell); margin-inline: auto; padding-inline: 24px; }
+@media (max-width: 640px) { .shell { padding-inline: 14px; } }
+
+.eyebrow {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--muted);
+}
+.tiny { font-size: 13px; color: var(--muted); }
+.small { font-size: 14.5px; color: var(--ink-2); }
+
+/* ---------- nagłówek ---------- */
+.top { border-bottom: 1px solid var(--rule); padding: 30px 0 26px; background: linear-gradient(to bottom, var(--accent-soft), transparent 80%); }
+.top-row { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+.top h1 { font-size: clamp(30px, 5vw, 46px); letter-spacing: -0.02em; }
+.top .sub { margin-top: 10px; color: var(--ink-2); max-width: 62ch; font-size: 17px; }
+.back {
+  margin-left: auto; font-size: 14px; text-decoration: none;
+  border: 1px solid var(--rule-2); border-radius: 100px; padding: 6px 15px;
+  color: var(--ink-2); white-space: nowrap;
+}
+.back:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- panel „co teraz” ---------- */
+.teraz { padding: 30px 0 6px; }
+.teraz-box {
+  border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-2);
+  padding: 22px 24px; display: flex; flex-direction: column; gap: 18px;
+}
+.teraz-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.teraz-head h2 { font-size: 22px; }
+.teraz-data { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dzis); }
+.teraz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
+.teraz-kol { display: flex; flex-direction: column; gap: 8px; }
+.teraz-kol h3 { font-size: 13px; font-family: var(--mono); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
+.teraz-kol ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.teraz-kol li { font-size: 13.5px; padding: 3px 9px; border-radius: 100px; border: 1px solid currentColor; }
+.teraz-kol .pusto { font-size: 13.5px; color: var(--muted); font-style: italic; }
+.k-oslona  { color: var(--a-oslona); }
+.k-wprost  { color: var(--a-wprost); }
+.k-przesad { color: var(--a-przesad); }
+.k-zbior   { color: var(--a-zbior); }
+
+/* ---------- pasek narzędzi ---------- */
+.narzedzia {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin-top: 26px;
+}
+.narzedzia-in { display: flex; gap: 10px 16px; flex-wrap: wrap; align-items: center; padding: 11px 0; }
+.grupa { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.grupa > .eyebrow { margin-right: 2px; }
+
+.chip {
+  font: inherit; font-size: 13px; background: none; border: 1px solid var(--rule-2);
+  color: var(--ink-2); border-radius: 100px; padding: 4px 12px; cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.chip:hover:not([aria-pressed="true"]) { border-color: var(--accent); color: var(--accent); }
+
+.szukaj {
+  font: inherit; font-size: 13.5px; padding: 5px 12px; border-radius: 100px;
+  border: 1px solid var(--rule-2); background: var(--paper-2); color: var(--ink);
+  min-width: 170px;
+}
+
+/* ---------- legenda ---------- */
+.legenda { display: flex; gap: 16px; flex-wrap: wrap; padding: 14px 0 0; }
+.leg { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-2); }
+.leg i { width: 22px; height: 9px; border-radius: 2px; display: block; }
+
+/* ---------- kalendarz ---------- */
+.kal-wrap {
+  margin-top: 16px; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--paper-2); overflow-x: auto; overflow-y: visible;
+}
+.kal { min-width: 940px; }
+
+.kal-head {
+  display: grid; grid-template-columns: var(--nazwa-w) 1fr;
+  position: sticky; top: 52px; z-index: 20; background: var(--paper-3);
+  border-bottom: 1px solid var(--rule-2);
+}
+.kal-head .rog {
+  position: sticky; left: 0; z-index: 21; background: var(--paper-3);
+  border-right: 1px solid var(--rule-2); padding: 8px 12px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  display: flex; align-items: center;
+}
+.miesiace { display: grid; grid-template-columns: repeat(12, 1fr); }
+.miesiace span {
+  padding: 8px 0; text-align: center; font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: 0.06em; color: var(--muted); border-left: 1px solid var(--rule);
+}
+.miesiace span.m-teraz { color: var(--dzis); background: color-mix(in srgb, var(--dzis) 10%, transparent); }
+
+.wiersz { display: grid; grid-template-columns: var(--nazwa-w) 1fr; border-bottom: 1px solid var(--rule); }
+.wiersz:last-child { border-bottom: 0; }
+.wiersz.ukryty { display: none; }
+
+.nazwa {
+  position: sticky; left: 0; z-index: 10; background: var(--paper-2);
+  border-right: 1px solid var(--rule-2); padding: 9px 10px 9px 12px;
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font: inherit; text-align: left; color: var(--ink); width: 100%;
+}
+.nazwa:hover { background: var(--paper-3); }
+.nazwa .n-txt { font-size: 14.5px; line-height: 1.3; }
+.nazwa .n-strzalka { margin-left: auto; color: var(--muted); font-size: 10px; transition: transform .15s; }
+.wiersz.otwarty .n-strzalka { transform: rotate(90deg); }
+.nazwa .n-moje {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--dzis); flex: none;
+}
+
+.tor {
+  position: relative; padding: 7px 0;
+  background-image:
+    repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px calc(100% / 12));
+  background-size: calc(100% / 12) 100%;
+}
+.tor.tor-teraz-tlo::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 2px;
+  background: var(--dzis); left: var(--dzis-x); opacity: 0.75; pointer-events: none;
+}
+
+.pas {
+  position: relative; height: 11px; margin: 2px 0;
+}
+.bar {
+  position: absolute; top: 0; height: 11px; border-radius: 2px;
+  display: flex; align-items: center; padding-inline: 5px; overflow: hidden;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.06em;
+  text-transform: uppercase; white-space: nowrap; color: var(--paper);
+}
+.bar.b-oslona  { background: var(--a-oslona); }
+.bar.b-wprost  { background: var(--a-wprost); }
+.bar.b-przesad { background: var(--a-przesad); }
+.bar.b-zbior   { background: var(--a-zbior); }
+
+/* warstwa osobista */
+.pas-moje { position: relative; height: 13px; margin-top: 3px; border-top: 1px dashed var(--rule-2); padding-top: 2px; }
+.znacznik {
+  position: absolute; top: 3px; width: 9px; height: 9px; margin-left: -4.5px;
+  border-radius: 50%; border: 1.5px solid var(--dzis); background: var(--dzis);
+  cursor: help;
+}
+.znacznik.szac { background: transparent; border-style: dashed; }
+.znacznik.z-zbior { border-radius: 1px; transform: rotate(45deg); }
+
+.detal {
+  grid-column: 1 / -1; padding: 4px 16px 16px calc(var(--nazwa-w) + 12px);
+  background: var(--paper-3); font-size: 14px; color: var(--ink-2);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.detal .d-akcje { display: flex; gap: 8px; flex-wrap: wrap; }
+.detal .d-spec { display: flex; gap: 18px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+@media (max-width: 700px) { .detal { padding-left: 16px; } }
+
+.pusty-wynik { padding: 26px; text-align: center; color: var(--muted); font-size: 14.5px; }
+
+/* ---------- moje wpisy ---------- */
+.moje { padding: 46px 0 70px; }
+.moje-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+.moje-head h2 { font-size: 26px; }
+
+.formularz {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;
+  align-items: end; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--paper-2); padding: 18px 20px;
+}
+.pole { display: flex; flex-direction: column; gap: 5px; }
+.pole label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); }
+.pole input, .pole select, .pole textarea {
+  font: inherit; font-size: 14px; padding: 7px 10px; border-radius: 3px;
+  border: 1px solid var(--rule-2); background: var(--paper); color: var(--ink);
+}
+.przycisk {
+  font: inherit; font-size: 14px; padding: 8px 18px; border-radius: 3px; cursor: pointer;
+  background: var(--accent); border: 1px solid var(--accent); color: var(--paper);
+}
+.przycisk.wtorny { background: none; color: var(--ink-2); border-color: var(--rule-2); }
+.przycisk.wtorny:hover { border-color: var(--accent); color: var(--accent); }
+
+.wpisy { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
+.wpis {
+  display: grid; grid-template-columns: 92px 1fr auto; gap: 14px; align-items: baseline;
+  padding: 11px 4px; border-bottom: 1px solid var(--rule); font-size: 14.5px;
+}
+.wpis .w-data { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wpis .w-tresc strong { font-weight: 600; }
+.wpis .w-czyn { font-family: var(--mono); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; margin-right: 6px; }
+.wpis .w-szac { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+.wpis .w-usun { font: inherit; font-size: 12.5px; background: none; border: 0; color: var(--muted); cursor: pointer; text-decoration: underline; padding: 0; }
+.wpis .w-usun:hover { color: var(--dzis); }
+.c-siew { background: var(--a-wprost-t); color: var(--a-wprost); }
+.c-przesadzenie { background: var(--a-przesad-t); color: var(--a-przesad); }
+.c-zbior { background: var(--a-zbior-t); color: var(--a-zbior); }
+.c-notatka { background: var(--paper-3); color: var(--muted); }
+
+.brak-wpisow { padding: 22px 4px; color: var(--muted); font-size: 14.5px; }
+
+.dane { margin-top: 26px; border-top: 1px solid var(--rule); padding-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+.dane textarea { width: 100%; min-height: 110px; font-family: var(--mono); font-size: 12px; resize: vertical; }
+.dane .rzad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.komunikat { font-size: 13.5px; color: var(--a-wprost); }
+.komunikat.blad { color: var(--dzis); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="shell top-row">
+    <div>
+      <div class="eyebrow">Warstwa informacyjna + własne wpisy</div>
+      <h1 style="margin-top: 10px;">Kalendarz ogrodnika</h1>
+      <p class="sub">Trzydzieści siedem upraw w rozdzielczości pół miesiąca: kiedy siać pod osłoną, kiedy wprost do ziemi, kiedy przesadzać i kiedy zbierać. Na to nakłada się Twoja własna warstwa — co faktycznie posiałaś i kiedy tego oczekiwać.</p>
+    </div>
+    <a class="back" href="index.html">← Przewodnik</a>
+  </div>
+</header>
+
+<section class="teraz">
+  <div class="shell">
+    <div class="teraz-box">
+      <div class="teraz-head">
+        <h2>Co robić teraz</h2>
+        <span class="teraz-data" id="terazData">—</span>
+      </div>
+      <div class="teraz-grid" id="terazGrid"></div>
+      <p class="tiny" id="terazMoje"></p>
+    </div>
+  </div>
+</section>
+
+<div class="narzedzia">
+  <div class="shell narzedzia-in">
+    <div class="grupa">
+      <span class="eyebrow">Ścieżka</span>
+      <button class="chip" data-sciezka="wszystko" aria-pressed="true">wszystko</button>
+      <button class="chip" data-sciezka="balkon" aria-pressed="false">balkon</button>
+      <button class="chip" data-sciezka="dzialka" aria-pressed="false">działka</button>
+    </div>
+    <div class="grupa">
+      <span class="eyebrow">Grupa</span>
+      <button class="chip" data-kat="wszystko" aria-pressed="true">wszystkie</button>
+      <button class="chip" data-kat="lisc" aria-pressed="false">liściaste</button>
+      <button class="chip" data-kat="korzen" aria-pressed="false">korzeniowe</button>
+      <button class="chip" data-kat="owoc" aria-pressed="false">owocowe</button>
+      <button class="chip" data-kat="cebul" aria-pressed="false">cebulowe</button>
+      <button class="chip" data-kat="ziolo" aria-pressed="false">zioła</button>
+    </div>
+    <div class="grupa">
+      <button class="chip" id="tylkoMoje" aria-pressed="false">tylko moje uprawy</button>
+    </div>
+    <input class="szukaj" type="search" id="szukaj" placeholder="Szukaj uprawy…" aria-label="Szukaj uprawy">
+  </div>
+</div>
+
+<div class="shell">
+  <div class="legenda">
+    <span class="leg"><i style="background: var(--a-oslona)"></i> siew pod osłoną / w domu</span>
+    <span class="leg"><i style="background: var(--a-wprost)"></i> siew lub sadzenie wprost</span>
+    <span class="leg"><i style="background: var(--a-przesad)"></i> przesadzanie</span>
+    <span class="leg"><i style="background: var(--a-zbior)"></i> zbiór</span>
+    <span class="leg"><i style="background: var(--dzis); width: 9px; height: 9px; border-radius: 50%;"></i> mój wpis</span>
+    <span class="leg"><i style="border: 1.5px dashed var(--dzis); width: 9px; height: 9px; border-radius: 50%; background: none;"></i> szacowany zbiór</span>
+  </div>
+
+  <div class="kal-wrap">
+    <div class="kal">
+      <div class="kal-head">
+        <div class="rog">Uprawa</div>
+        <div class="miesiace" id="miesiaceHead"></div>
+      </div>
+      <div id="kalBody"></div>
+    </div>
+  </div>
+  <p class="tiny" id="licznik" style="margin-top: 10px;"></p>
+</div>
+
+<section class="moje">
+  <div class="shell">
+    <div class="moje-head">
+      <h2>Moje wpisy</h2>
+      <span class="tiny">Zapisywane w tej przeglądarce. Nie wysyłane nigdzie.</span>
+    </div>
+
+    <form class="formularz" id="formWpis">
+      <div class="pole">
+        <label for="fUprawa">Uprawa</label>
+        <select id="fUprawa" required></select>
+      </div>
+      <div class="pole">
+        <label for="fCzynnosc">Czynność</label>
+        <select id="fCzynnosc">
+          <option value="siew">posiane</option>
+          <option value="przesadzenie">przesadzone</option>
+          <option value="zbior">zebrane</option>
+          <option value="notatka">notatka</option>
+        </select>
+      </div>
+      <div class="pole">
+        <label for="fData">Data</label>
+        <input type="date" id="fData" required>
+      </div>
+      <div class="pole">
+        <label for="fIle">Ile (opcjonalnie)</label>
+        <input type="text" id="fIle" placeholder="np. 2 skrzynki, 12 sadzonek">
+      </div>
+      <div class="pole" style="grid-column: span 2;">
+        <label for="fNotatka">Notatka (opcjonalnie)</label>
+        <input type="text" id="fNotatka" placeholder="np. odmiana, miejsce, pogoda">
+      </div>
+      <div class="pole">
+        <label>&nbsp;</label>
+        <button class="przycisk" type="submit">Dodaj wpis</button>
+      </div>
+    </form>
+
+    <div class="wpisy" id="listaWpisow"></div>
+
+    <div class="dane">
+      <div class="rzad">
+        <span class="eyebrow">Kopia zapasowa</span>
+        <button class="przycisk wtorny" id="btnEksport" type="button">Pokaż moje dane</button>
+        <button class="przycisk wtorny" id="btnKopiuj" type="button">Kopiuj do schowka</button>
+        <button class="przycisk wtorny" id="btnImport" type="button">Wczytaj z pola</button>
+        <span class="komunikat" id="komunikat"></span>
+      </div>
+      <textarea id="poleDanych" placeholder="Kliknij „Pokaż moje dane”, żeby wyeksportować wpisy. Żeby je przenieść na inne urządzenie — wklej tu zapisany wcześniej tekst i kliknij „Wczytaj z pola”." spellcheck="false"></textarea>
+      <p class="tiny">Dane siedzą w pamięci tej przeglądarki (<code>localStorage</code>). Wyczyszczenie danych witryny albo tryb prywatny je usuwa — dlatego warto raz na jakiś czas skopiować powyższy tekst do notatnika.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     DANE — okna w rozdzielczości pół miesiąca.
+     Slot 0 = 1–15 stycznia, slot 1 = 16–31 stycznia, … slot 23 = druga połowa grudnia.
+     Terminy dla Polski (strefa 6–7): ostatnie przymrozki ok. 15 maja,
+     pierwsze jesienne w drugiej połowie października.
+     ============================================================ */
+  var S = function (m, polowa) { return m * 2 + polowa; }; // m: 0 = styczeń
+
+  var UPRAWY = [
+    { id:"rzodkiewka", nazwa:"Rzodkiewka", kat:"korzen", sciezki:["balkon","dzialka"], dni:30,
+      oslona:[[4,5]], wprost:[[6,16]], zbior:[[8,19]],
+      spec:"głębokość 1–2 cm · rzędy co 10 cm · przerywać co 2–3 cm",
+      info:"Najszybszy zbiór w całym ogrodzie. Siej po rządku co 2–3 tygodnie zamiast całej paczki naraz." },
+
+    { id:"salata", nazwa:"Sałata na liście", kat:"lisc", sciezki:["balkon","dzialka"], dni:45,
+      oslona:[[3,7],[12,13]], wprost:[[7,16]], przesad:[[6,9]], zbior:[[8,21]],
+      spec:"głębokość 1 cm · rzędy co 15 cm · bez przerywania",
+      info:"Zbieraj po 2–3 zewnętrzne liście z rośliny, środek odrasta. Lipcowy siew odmian zimowych daje zbiór na przedwiośniu." },
+
+    { id:"rukola", nazwa:"Rukola", kat:"lisc", sciezki:["balkon","dzialka"], dni:30,
+      oslona:[[5,6]], wprost:[[7,17]], zbior:[[9,21]],
+      spec:"głębokość 1–2 cm · rzędy co 15–20 cm",
+      info:"Najlepiej wychodzi z siewu późnoletniego — w chłodzie nie gorzknieje i nie strzela w kwiat." },
+
+    { id:"szpinak", nazwa:"Szpinak", kat:"lisc", sciezki:["balkon","dzialka"], dni:42,
+      oslona:[[4,5]], wprost:[[6,9],[14,16]], zbior:[[9,11],[17,21]],
+      spec:"głębokość 2 cm · rzędy co 15 cm · 1 nasiono co 1 cm",
+      info:"Dwa okna w roku, bo w upale strzela w kwiat. Siew sierpniowy zbierasz jeszcze w listopadzie." },
+
+    { id:"bocwina", nazwa:"Boćwina", kat:"lisc", sciezki:["balkon","dzialka"], dni:55,
+      oslona:[[5,7]], wprost:[[8,12]], przesad:[[8,11]], zbior:[[11,21]],
+      spec:"głębokość 2–3 cm · rzędy co 20–25 cm · na łodygi co 20 cm",
+      info:"Najbardziej wyrozumiała roślina z tej listy. Znosi suszę, półcień i zaniedbanie." },
+
+    { id:"gorczyca", nazwa:"Gorczyca liściasta", kat:"lisc", sciezki:["balkon","dzialka"], dni:35,
+      wprost:[[7,17]], zbior:[[9,21]],
+      spec:"głębokość 1 cm · rzędy co 15–20 cm",
+      info:"Ostra w smaku, rośnie szybko, nie wymaga przerywania. Zbieraj największe liście." },
+
+    { id:"mizuna", nazwa:"Mizuna i pak choi", kat:"lisc", sciezki:["balkon","dzialka"], dni:40,
+      wprost:[[8,16]], zbior:[[11,21]],
+      spec:"rzędy co 15–20 cm · zbiór na wielokrotne cięcie",
+      info:"Prowadzone jak gorczyca. Im częściej zbierasz liście, tym więcej odrasta." },
+
+    { id:"jarmuz", nazwa:"Jarmuż", kat:"lisc", sciezki:["dzialka"], dni:90,
+      oslona:[[8,10]], przesad:[[11,13]], zbior:[[18,23],[0,5]],
+      spec:"rozstawa 40–45 cm · przesadzać przy 4–5 liściach właściwych",
+      info:"Zbierasz przez całą zimę, a wiosną jeszcze pędy kwiatowe. Po przymrozku jest słodszy." },
+
+    { id:"pekinska", nazwa:"Kapusta pekińska", kat:"lisc", sciezki:["dzialka"], dni:70,
+      oslona:[[11,13]], przesad:[[13,15]], zbior:[[17,21]],
+      spec:"rozstawa 30–35 cm",
+      info:"Uprawa wyłącznie jesienna — siana wiosną strzela w kwiat." },
+
+    { id:"burak", nazwa:"Burak", kat:"korzen", sciezki:["balkon","dzialka"], dni:75,
+      oslona:[[6,7]], wprost:[[8,12]], zbior:[[12,20]],
+      spec:"głębokość 2 cm · rzędy co 20–25 cm · przerywać co 5–7 cm",
+      info:"Jedno „nasiono” to kilka nasion, więc rośnie kępkami. W multiplatach siej po 4–5 i sadź całą kępkę." },
+
+    { id:"marchew", nazwa:"Marchew", kat:"korzen", sciezki:["dzialka"], dni:80,
+      wprost:[[7,11]], zbior:[[12,21]],
+      spec:"głębokość 1–2 cm · rzędy co 15–20 cm · przerywać co 4–7 cm",
+      info:"Nigdy nie przesadzać — korzeń palowy jest zbyt delikatny. Zaraz po wschodach nakryj drobną siatką przeciw połyśnicy." },
+
+    { id:"rzepa", nazwa:"Rzepa", kat:"korzen", sciezki:["dzialka"], dni:50,
+      wprost:[[8,15]], zbior:[[11,19]],
+      spec:"rzędy co 20 cm · przerywać co 10 cm",
+      info:"Siew wprost co dwa tygodnie przez całą wiosnę i lato." },
+
+    { id:"kalarepa", nazwa:"Kalarepa", kat:"korzen", sciezki:["balkon","dzialka"], dni:60,
+      oslona:[[6,13]], przesad:[[8,15]], zbior:[[11,20]],
+      spec:"rozstawa 15 cm",
+      info:"Zbieraj, gdy zgrubienie jest trochę większe od piłki tenisowej. Odmiany fioletowe są odporniejsze na chłód." },
+
+    { id:"ziemniaki", nazwa:"Ziemniaki", kat:"korzen", sciezki:["balkon","dzialka"], dni:90,
+      wprost:[[6,8]], zbior:[[11,17]],
+      spec:"sadzenie 15–20 cm głęboko · donica 30 l na 3 sadzeniaki",
+      info:"Podkiełkuj sadzeniaki 2–3 tygodnie wcześniej w jasnym, chłodnym miejscu. Wczesne 10 tyg., średnio wczesne 13, późne 16." },
+
+    { id:"czosnek", nazwa:"Czosnek", kat:"cebul", sciezki:["balkon","dzialka"], dni:270,
+      wprost:[[18,21]], zbior:[[12,14]],
+      spec:"ząbki co 15 cm · głębokość 5 cm",
+      info:"Sadzony jesienią, zimuje w ziemi. Jeden ząbek daje całą główkę. Zbiór, gdy dolna połowa liści zbrązowieje." },
+
+    { id:"cebula", nazwa:"Cebula z dymki", kat:"cebul", sciezki:["dzialka"], dni:120,
+      wprost:[[6,8]], zbior:[[13,16]],
+      spec:"rozstawa 10 cm · rzędy co 25 cm",
+      info:"Zbieraj, gdy główki są duże, a szczypior jeszcze zielony. Susz przed przechowywaniem." },
+
+    { id:"por", nazwa:"Por", kat:"cebul", sciezki:["dzialka"], dni:180,
+      oslona:[[8,10]], przesad:[[12,14]], zbior:[[20,23],[0,3]],
+      spec:"siew gęsty w rozsadniku · przesadzać co 15 cm w głębokie dołki",
+      info:"Największy sojusznik na przednówek — stoi w ziemi i czeka, aż go potrzebujesz." },
+
+    { id:"pomidory", nazwa:"Pomidory", kat:"owoc", sciezki:["balkon","dzialka"], dni:77,
+      oslona:[[4,6]], przesad:[[9,11]], zbior:[[13,18]],
+      spec:"donica 20–25 l · podpora 1,5 m dla odmian wysokich",
+      info:"Odmiany karłowe nie wymagają palikowania ani pasynkowania. Nierówne podlewanie psuje owoce." },
+
+    { id:"papryka", nazwa:"Papryka i chili", kat:"owoc", sciezki:["balkon","dzialka"], dni:90,
+      oslona:[[2,5]], przesad:[[9,11]], zbior:[[15,19]],
+      spec:"siew powierzchniowy · rozstawa 30–45 cm",
+      info:"Najwcześniejszy siew w całym kalendarzu — potrzebuje bardzo długiego sezonu i ciepła. Ogranicz podlewanie 2–3 tygodnie przed zbiorem, będzie ostrzejsza." },
+
+    { id:"ogorek", nazwa:"Ogórek", kat:"owoc", sciezki:["balkon","dzialka"], dni:60,
+      oslona:[[7,8]], przesad:[[9,11]], zbior:[[12,18]],
+      spec:"prowadzenie pionowe · rozstawa 30–40 cm",
+      info:"Prowadzony w górę po sznurku lub kracie daje najwięcej z metra. Zbieraj, zanim urosną za duże." },
+
+    { id:"cukinia", nazwa:"Cukinia", kat:"owoc", sciezki:["dzialka"], dni:55,
+      oslona:[[7,8]], przesad:[[9,11]], zbior:[[12,17]],
+      spec:"rozstawa 1 m (krzaczaste), 2–3 m (płożące)",
+      info:"Dwie rośliny wyżywią rodzinę. Zawsze zrywaj największe owoce, żeby mniejsze rosły dalej." },
+
+    { id:"dynia", nazwa:"Dynia", kat:"owoc", sciezki:["dzialka"], dni:110,
+      oslona:[[8,9]], przesad:[[9,11]], zbior:[[17,19]],
+      spec:"rozstawa 2–3 m · zostaw 5 cm szypułki",
+      info:"Owoce, które nie dojrzały przed przymrozkiem, dochodzą na słonecznym parapecie." },
+
+    { id:"fasolka", nazwa:"Fasolka karłowa", kat:"owoc", sciezki:["balkon","dzialka"], dni:60,
+      oslona:[[7,10]], wprost:[[10,11]], przesad:[[9,12]], zbior:[[12,17]],
+      spec:"głębokość 5 cm · rozstawa 15–20 cm",
+      info:"Zwarta, bez podpór, świetnie zapycha dziury po zebranych roślinach. Nowa partia co dwa tygodnie." },
+
+    { id:"fasola-tyczna", nazwa:"Fasola tyczna", kat:"owoc", sciezki:["dzialka"], dni:70,
+      oslona:[[8,9]], przesad:[[9,11]], zbior:[[13,17]],
+      spec:"głębokość 5 cm · podpory min. 1,8 m · tyczki co 25–30 cm",
+      info:"Przy jasnej ścianie albo zbiorniku na wodę plonuje nawet dwa tygodnie wcześniej — odbite światło plus ciepło." },
+
+    { id:"bob", nazwa:"Bób", kat:"owoc", sciezki:["dzialka"], dni:100,
+      wprost:[[4,7]], zbior:[[10,13]],
+      spec:"głębokość 5 cm · rozstawa 25–30 cm",
+      info:"Najodporniejszy na mróz — siej bardzo wcześnie. Przy kwitnieniu uszczyknij wierzchołek: jest jadalny i zapobiega mszycom." },
+
+    { id:"groch", nazwa:"Groch", kat:"owoc", sciezki:["dzialka"], dni:70,
+      oslona:[[4,6]], wprost:[[6,10]], zbior:[[11,15]],
+      spec:"wysiew w rynnie · podpory 1,5 m",
+      info:"Wysiany w kawałku rynny na parapecie, a potem zsunięty do grządki jednym ruchem." },
+
+    { id:"pedy-grochu", nazwa:"Pędy grochu", kat:"lisc", sciezki:["balkon","dzialka"], dni:14,
+      oslona:[[0,23]], zbior:[[0,23]],
+      spec:"tacka · 5 cm ziemi · przykrycie 2–3 cm · zwykły suchy groch",
+      info:"Działa przez cały rok na parapecie. Najszybsze świeże zielone w środku zimy — ścinasz przy 10 cm." },
+
+    { id:"mikrolistki", nazwa:"Mikrolistki", kat:"lisc", sciezki:["balkon","dzialka"], dni:14,
+      oslona:[[0,23]], zbior:[[0,23]],
+      spec:"płaska tacka · siew gęsty · światło z okna lub LED",
+      info:"Rzodkiewka, gorczyca, słonecznik, groch. Ścinasz nożyczkami przy pierwszych liściach właściwych." },
+
+    { id:"bazylia", nazwa:"Bazylia", kat:"ziolo", sciezki:["balkon","dzialka"], dni:60,
+      oslona:[[5,9]], zbior:[[11,19]],
+      spec:"8 nasion na doniczkę 10 cm · ziemia z domieszką żwiru",
+      info:"Wyłącznie ciepło — w Polsce realnie tylko parapet albo osłona. Uszczykuj wierzchołki przy 10 cm." },
+
+    { id:"natka", nazwa:"Natka pietruszki", kat:"ziolo", sciezki:["balkon","dzialka"], dni:80,
+      oslona:[[5,7]], wprost:[[7,10]], zbior:[[12,23],[0,5]],
+      spec:"doniczka 20 cm · kiełkuje 2–3 tygodnie",
+      info:"Kiełkuje wolno i to zniechęca, ale potem zbierasz ją nawet zimą. Zbieraj zewnętrzne liście." },
+
+    { id:"koperek", nazwa:"Koperek", kat:"ziolo", sciezki:["balkon","dzialka"], dni:50,
+      wprost:[[7,15]], zbior:[[10,19]],
+      spec:"siew wprost · nie przesadzać",
+      info:"Nie znosi przesadzania. Siej partiami — szybko przechodzi w kwiat, a nasiona też się przydają." },
+
+    { id:"kolendra", nazwa:"Kolendra", kat:"ziolo", sciezki:["balkon","dzialka"], dni:45,
+      wprost:[[7,16]], zbior:[[10,19]],
+      spec:"siew wprost · rzędy co 15 cm",
+      info:"Nasiona ze słoika z przyprawami kiełkują. W upale szybko strzela w kwiat — trzymaj w półcieniu." },
+
+    { id:"mieta", nazwa:"Mięta", kat:"ziolo", sciezki:["balkon","dzialka"], dni:0,
+      przesad:[[6,9]], zbior:[[9,19]],
+      spec:"bylina · doniczka 25 cm · zawsze osobno",
+      info:"W gruncie rozkłonicza się i wypiera sąsiadów, dlatego zawsze w osobnym pojemniku. Zimą zamiera, wiosną wraca." },
+
+    { id:"tymianek", nazwa:"Tymianek", kat:"ziolo", sciezki:["balkon","dzialka"], dni:0,
+      przesad:[[6,9]], zbior:[[8,21]],
+      spec:"bylina · doniczka 20 cm · ziemia z gruzem",
+      info:"Kupujesz raz, masz na lata. Zimuje na zewnątrz. Ginie wyłącznie od nadmiaru wody." },
+
+    { id:"rozmaryn", nazwa:"Rozmaryn", kat:"ziolo", sciezki:["balkon","dzialka"], dni:0,
+      przesad:[[6,9]], zbior:[[8,21]],
+      spec:"bylina · duża doniczka · podłoże przepuszczalne",
+      info:"Przy spadku poniżej −2 °C wnieś pod dach. W Polsce rzadko zimuje na zewnątrz bez osłony." },
+
+    { id:"nasturcja", nazwa:"Nasturcja", kat:"ziolo", sciezki:["balkon","dzialka"], dni:60,
+      wprost:[[8,10]], zbior:[[11,18]],
+      spec:"rogi pojemników i grządek · siew wprost",
+      info:"Liście i kwiaty jadalne. Mszyce wolą ją od warzyw, więc działa jak roślina-pułapka." },
+
+    { id:"truskawki", nazwa:"Truskawki", kat:"owoc", sciezki:["balkon","dzialka"], dni:0,
+      przesad:[[15,19]], zbior:[[10,13]],
+      spec:"bylina · rozstawa 30 cm · rozmnażanie z rozłogów",
+      info:"Sadzone późnym latem owocują następnego lata. Rozłogi z jednej rośliny dają darmowe sadzonki na kolejne lata." }
+  ];
+
+  var CZYNNOSCI = [
+    { klucz: "oslona",  nazwa: "siew pod osłoną", krotko: "pod osłoną", klasa: "b-oslona",  kolor: "k-oslona" },
+    { klucz: "wprost",  nazwa: "siew wprost",     krotko: "wprost",     klasa: "b-wprost",  kolor: "k-wprost" },
+    { klucz: "przesad", nazwa: "przesadzanie",    krotko: "przesadzanie", klasa: "b-przesad", kolor: "k-przesad" },
+    { klucz: "zbior",   nazwa: "zbiór",           krotko: "zbiór",      klasa: "b-zbior",   kolor: "k-zbior" }
+  ];
+
+  var MIESIACE_SKROT = ["STY","LUT","MAR","KWI","MAJ","CZE","LIP","SIE","WRZ","PAŹ","LIS","GRU"];
+  var MIESIACE_PELNE = ["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+
+  /* ============================================================
+     STAN
+     ============================================================ */
+  var KLUCZ_WPISY = "ogrod-kalendarz-wpisy";
+  var KLUCZ_TRYB = "ogrod-mode";
+
+  var wpisy = wczytajWpisy();
+  var filtrSciezka = "wszystko";
+  var filtrKat = "wszystko";
+  var tylkoMoje = false;
+  var fraza = "";
+  var otwarte = {};
+
+  function wczytajWpisy() {
+    try {
+      var s = localStorage.getItem(KLUCZ_WPISY);
+      var t = s ? JSON.parse(s) : [];
+      return Array.isArray(t) ? t : [];
+    } catch (e) { return []; }
+  }
+  function zapiszWpisy() {
+    try { localStorage.setItem(KLUCZ_WPISY, JSON.stringify(wpisy)); } catch (e) {}
+  }
+
+  /* ============================================================
+     DATY
+     ============================================================ */
+  function slotZDaty(d) { return d.getMonth() * 2 + (d.getDate() <= 15 ? 0 : 1); }
+
+  function pozycjaSlotu(d) {
+    // ułamek 0–1 wzdłuż roku, z dokładnością do dnia
+    var wMies = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    return (d.getMonth() + (d.getDate() - 1) / wMies) / 12;
+  }
+
+  function isoNaDate(iso) {
+    var cz = iso.split("-");
+    return new Date(+cz[0], +cz[1] - 1, +cz[2]);
+  }
+  function dataNaIso(d) {
+    var m = String(d.getMonth() + 1).padStart(2, "0");
+    var dz = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + m + "-" + dz;
+  }
+  function ladnaData(iso) {
+    var d = isoNaDate(iso);
+    return d.getDate() + " " + MIESIACE_PELNE[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  var DZIS = new Date();
+  var SLOT_DZIS = slotZDaty(DZIS);
+  // ta sama data bez godziny — do porównań, żeby zbiór wypadający
+  // dzisiaj nie odpadał przez to, że „teraz” jest już po północy
+  var DZIS_0 = new Date(DZIS.getFullYear(), DZIS.getMonth(), DZIS.getDate());
+
+  function wZakresie(zakresy, slot) {
+    if (!zakresy) return false;
+    for (var i = 0; i < zakresy.length; i++) {
+      if (slot >= zakresy[i][0] && slot <= zakresy[i][1]) return true;
+    }
+    return false;
+  }
+
+  /* ============================================================
+     RENDER — nagłówek miesięcy
+     ============================================================ */
+  (function naglowek() {
+    var el = document.getElementById("miesiaceHead");
+    MIESIACE_SKROT.forEach(function (m, i) {
+      var s = document.createElement("span");
+      s.textContent = m;
+      if (i === DZIS.getMonth()) s.className = "m-teraz";
+      el.appendChild(s);
+    });
+  })();
+
+  /* ============================================================
+     RENDER — kalendarz
+     ============================================================ */
+  var body = document.getElementById("kalBody");
+
+  function mojeDla(id) {
+    return wpisy.filter(function (w) { return w.cropId === id; });
+  }
+
+  function pasujeDoFiltrow(u) {
+    if (filtrSciezka !== "wszystko" && u.sciezki.indexOf(filtrSciezka) === -1) return false;
+    if (filtrKat !== "wszystko" && u.kat !== filtrKat) return false;
+    if (tylkoMoje && mojeDla(u.id).length === 0) return false;
+    if (fraza && u.nazwa.toLowerCase().indexOf(fraza) === -1) return false;
+    return true;
+  }
+
+  function rysuj() {
+    body.textContent = "";
+    var widoczne = 0;
+
+    UPRAWY.forEach(function (u) {
+      if (!pasujeDoFiltrow(u)) return;
+      widoczne++;
+
+      var wiersz = document.createElement("div");
+      wiersz.className = "wiersz" + (otwarte[u.id] ? " otwarty" : "");
+
+      /* nazwa */
+      var moje = mojeDla(u.id);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "nazwa";
+      btn.setAttribute("aria-expanded", String(!!otwarte[u.id]));
+      btn.innerHTML =
+        (moje.length ? '<span class="n-moje" title="masz wpisy dla tej uprawy"></span>' : "") +
+        '<span class="n-txt">' + u.nazwa + "</span>" +
+        '<span class="n-strzalka">▶</span>';
+      btn.addEventListener("click", function () {
+        otwarte[u.id] = !otwarte[u.id];
+        rysuj();
+      });
+      wiersz.appendChild(btn);
+
+      /* tor z pasami */
+      var tor = document.createElement("div");
+      tor.className = "tor tor-teraz-tlo";
+      tor.style.setProperty("--dzis-x", (pozycjaSlotu(DZIS) * 100).toFixed(2) + "%");
+
+      CZYNNOSCI.forEach(function (cz) {
+        var zakresy = u[cz.klucz];
+        if (!zakresy || !zakresy.length) return;
+        var pas = document.createElement("div");
+        pas.className = "pas";
+        zakresy.forEach(function (z) {
+          var bar = document.createElement("div");
+          bar.className = "bar " + cz.klasa;
+          var lewo = (z[0] / 24) * 100;
+          var szer = ((z[1] - z[0] + 1) / 24) * 100;
+          bar.style.left = lewo.toFixed(3) + "%";
+          bar.style.width = szer.toFixed(3) + "%";
+          bar.title = u.nazwa + " — " + cz.nazwa + ": " + opisZakresu(z);
+          if (szer > 13) bar.textContent = cz.krotko;
+          pas.appendChild(bar);
+        });
+        tor.appendChild(pas);
+      });
+
+      /* warstwa osobista */
+      if (moje.length) {
+        var pasM = document.createElement("div");
+        pasM.className = "pas-moje";
+        moje.forEach(function (w) {
+          var d = isoNaDate(w.date);
+          var zn = document.createElement("span");
+          zn.className = "znacznik" + (w.action === "zbior" ? " z-zbior" : "");
+          zn.style.left = (pozycjaSlotu(d) * 100).toFixed(2) + "%";
+          zn.title = ladnaData(w.date) + " — " + etykietaCzynnosci(w.action) +
+            (w.qty ? " (" + w.qty + ")" : "") + (w.note ? " · " + w.note : "");
+          pasM.appendChild(zn);
+
+          var est = szacowanyZbior(w, u);
+          if (est) {
+            var zs = document.createElement("span");
+            zs.className = "znacznik szac z-zbior";
+            zs.style.left = (pozycjaSlotu(est) * 100).toFixed(2) + "%";
+            zs.title = "szacowany zbiór: " + ladnaData(dataNaIso(est)) +
+              " (" + u.dni + " dni od siewu)";
+            pasM.appendChild(zs);
+          }
+        });
+        tor.appendChild(pasM);
+      }
+
+      wiersz.appendChild(tor);
+      body.appendChild(wiersz);
+
+      /* panel szczegółów */
+      if (otwarte[u.id]) {
+        var det = document.createElement("div");
+        det.className = "wiersz";
+        det.style.gridTemplateColumns = "1fr";
+        var inner = document.createElement("div");
+        inner.className = "detal";
+
+        var opisy = CZYNNOSCI.filter(function (c) { return u[c.klucz] && u[c.klucz].length; })
+          .map(function (c) {
+            return "<strong>" + c.nazwa + ":</strong> " +
+              u[c.klucz].map(opisZakresu).join(" oraz ");
+          }).join("<br>");
+
+        inner.innerHTML =
+          "<div>" + opisy + "</div>" +
+          "<div>" + u.info + "</div>" +
+          '<div class="d-spec">' + u.spec.split(" · ").map(function (s) { return "<span>" + s + "</span>"; }).join("") +
+          (u.dni ? "<span>od siewu do zbioru: ok. " + u.dni + " dni</span>" : "") + "</div>";
+
+        var akcje = document.createElement("div");
+        akcje.className = "d-akcje";
+        var dodaj = document.createElement("button");
+        dodaj.type = "button";
+        dodaj.className = "przycisk wtorny";
+        dodaj.textContent = "Dodaj wpis dla tej uprawy";
+        dodaj.addEventListener("click", function () {
+          document.getElementById("fUprawa").value = u.id;
+          document.getElementById("formWpis").scrollIntoView({ behavior: "smooth", block: "center" });
+          document.getElementById("fData").focus();
+        });
+        akcje.appendChild(dodaj);
+        inner.appendChild(akcje);
+
+        det.appendChild(inner);
+        body.appendChild(det);
+      }
+    });
+
+    if (!widoczne) {
+      var p = document.createElement("div");
+      p.className = "pusty-wynik";
+      p.textContent = tylkoMoje
+        ? "Nie masz jeszcze wpisów. Dodaj pierwszy w sekcji „Moje wpisy” poniżej."
+        : "Żadna uprawa nie pasuje do tych filtrów.";
+      body.appendChild(p);
+    }
+
+    document.getElementById("licznik").textContent =
+      "Widocznych upraw: " + widoczne + " z " + UPRAWY.length +
+      ". Kliknij nazwę uprawy, żeby zobaczyć szczegóły i dodać własny wpis.";
+  }
+
+  function opisZakresu(z) {
+    var a = etykietaSlotu(z[0]);
+    var b = etykietaSlotu(z[1]);
+    if (z[0] === 0 && z[1] === 23) return "cały rok";
+    return a === b ? a : a + " – " + b;
+  }
+  function etykietaSlotu(s) {
+    var m = MIESIACE_SKROT[Math.floor(s / 2)].toLowerCase();
+    return (s % 2 === 0 ? "1. poł. " : "2. poł. ") + m;
+  }
+  function etykietaCzynnosci(a) {
+    return { siew: "posiane", przesadzenie: "przesadzone", zbior: "zebrane", notatka: "notatka" }[a] || a;
+  }
+  function szacowanyZbior(w, u) {
+    if (w.action !== "siew" || !u || !u.dni) return null;
+    var d = isoNaDate(w.date);
+    d.setDate(d.getDate() + u.dni);
+    return d;
+  }
+
+  /* ============================================================
+     PANEL „CO TERAZ”
+     ============================================================ */
+  function rysujTeraz() {
+    document.getElementById("terazData").textContent =
+      DZIS.getDate() + " " + MIESIACE_PELNE[DZIS.getMonth()] + " · " + etykietaSlotu(SLOT_DZIS);
+
+    var grid = document.getElementById("terazGrid");
+    grid.textContent = "";
+
+    CZYNNOSCI.forEach(function (cz) {
+      var lista = UPRAWY.filter(function (u) {
+        if (filtrSciezka !== "wszystko" && u.sciezki.indexOf(filtrSciezka) === -1) return false;
+        return wZakresie(u[cz.klucz], SLOT_DZIS);
+      });
+
+      var kol = document.createElement("div");
+      kol.className = "teraz-kol";
+      var h = document.createElement("h3");
+      h.className = cz.kolor;
+      h.textContent = cz.nazwa + " (" + lista.length + ")";
+      kol.appendChild(h);
+
+      if (!lista.length) {
+        var pusto = document.createElement("p");
+        pusto.className = "pusto";
+        pusto.textContent = "nic w tym okienku";
+        kol.appendChild(pusto);
+      } else {
+        var ul = document.createElement("ul");
+        lista.forEach(function (u) {
+          var li = document.createElement("li");
+          li.className = cz.kolor;
+          li.textContent = u.nazwa;
+          ul.appendChild(li);
+        });
+        kol.appendChild(ul);
+      }
+      grid.appendChild(kol);
+    });
+
+    /* własne szacowane zbiory w najbliższych 21 dniach */
+    var granica = new Date(DZIS_0); granica.setDate(granica.getDate() + 21);
+    var nadchodzace = [];
+    wpisy.forEach(function (w) {
+      var u = UPRAWY.find(function (x) { return x.id === w.cropId; });
+      var est = szacowanyZbior(w, u);
+      if (est && est >= DZIS_0 && est <= granica) {
+        nadchodzace.push(u.nazwa + " ok. " + est.getDate() + " " + MIESIACE_PELNE[est.getMonth()]);
+      }
+    });
+    document.getElementById("terazMoje").textContent = nadchodzace.length
+      ? "Z Twoich wpisów — szacowany zbiór w ciągu 3 tygodni: " + nadchodzace.join(", ") + "."
+      : "";
+  }
+
+  /* ============================================================
+     FILTRY
+     ============================================================ */
+  function podepnijChipy(selektor, ustaw) {
+    var chipy = Array.prototype.slice.call(document.querySelectorAll(selektor));
+    chipy.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chipy.forEach(function (x) { x.setAttribute("aria-pressed", String(x === c)); });
+        ustaw(c);
+        rysuj();
+        rysujTeraz();
+      });
+    });
+    return chipy;
+  }
+
+  var chipySciezka = podepnijChipy("[data-sciezka]", function (c) {
+    filtrSciezka = c.dataset.sciezka;
+    if (filtrSciezka === "wszystko") {
+      delete document.body.dataset.mode;
+    } else {
+      document.body.dataset.mode = filtrSciezka;
+      try { localStorage.setItem(KLUCZ_TRYB, filtrSciezka); } catch (e) {}
+    }
+  });
+
+  podepnijChipy("[data-kat]", function (c) { filtrKat = c.dataset.kat; });
+
+  var btnMoje = document.getElementById("tylkoMoje");
+  btnMoje.addEventListener("click", function () {
+    tylkoMoje = !tylkoMoje;
+    btnMoje.setAttribute("aria-pressed", String(tylkoMoje));
+    rysuj();
+  });
+
+  var polSzukaj = document.getElementById("szukaj");
+  polSzukaj.addEventListener("input", function () {
+    fraza = polSzukaj.value.trim().toLowerCase();
+    rysuj();
+  });
+
+  /* ============================================================
+     FORMULARZ I LISTA WPISÓW
+     ============================================================ */
+  (function wypelnijSelect() {
+    var sel = document.getElementById("fUprawa");
+    UPRAWY.slice().sort(function (a, b) { return a.nazwa.localeCompare(b.nazwa, "pl"); })
+      .forEach(function (u) {
+        var o = document.createElement("option");
+        o.value = u.id;
+        o.textContent = u.nazwa;
+        sel.appendChild(o);
+      });
+  })();
+
+  document.getElementById("fData").value = dataNaIso(DZIS);
+
+  document.getElementById("formWpis").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var w = {
+      id: "w" + Date.now() + "-" + Math.round(Math.random() * 1e6),
+      cropId: document.getElementById("fUprawa").value,
+      action: document.getElementById("fCzynnosc").value,
+      date: document.getElementById("fData").value,
+      qty: document.getElementById("fIle").value.trim(),
+      note: document.getElementById("fNotatka").value.trim()
+    };
+    if (!w.date) return;
+    wpisy.push(w);
+    zapiszWpisy();
+    document.getElementById("fIle").value = "";
+    document.getElementById("fNotatka").value = "";
+    rysujWpisy();
+    rysuj();
+    rysujTeraz();
+    pokazKomunikat("Dodano wpis.");
+  });
+
+  function rysujWpisy() {
+    var lista = document.getElementById("listaWpisow");
+    lista.textContent = "";
+
+    if (!wpisy.length) {
+      var p = document.createElement("p");
+      p.className = "brak-wpisow";
+      p.textContent = "Jeszcze nic tu nie ma. Pierwszy wpis pojawi się także jako znacznik na kalendarzu powyżej.";
+      lista.appendChild(p);
+      return;
+    }
+
+    wpisy.slice().sort(function (a, b) { return b.date.localeCompare(a.date); })
+      .forEach(function (w) {
+        var u = UPRAWY.find(function (x) { return x.id === w.cropId; });
+        var est = szacowanyZbior(w, u);
+
+        var el = document.createElement("div");
+        el.className = "wpis";
+
+        var d = document.createElement("span");
+        d.className = "w-data";
+        d.textContent = w.date;
+
+        var t = document.createElement("div");
+        t.className = "w-tresc";
+        t.innerHTML =
+          '<span class="w-czyn c-' + w.action + '">' + etykietaCzynnosci(w.action) + "</span>" +
+          "<strong>" + (u ? u.nazwa : w.cropId) + "</strong>" +
+          (w.qty ? " — " + escapuj(w.qty) : "") +
+          (w.note ? ' <span style="color: var(--muted)">· ' + escapuj(w.note) + "</span>" : "") +
+          (est ? '<span class="w-szac">szacowany zbiór ok. ' + ladnaData(dataNaIso(est)) +
+            " (" + u.dni + " dni)</span>" : "");
+
+        var usun = document.createElement("button");
+        usun.type = "button";
+        usun.className = "w-usun";
+        usun.textContent = "usuń";
+        usun.addEventListener("click", function () {
+          wpisy = wpisy.filter(function (x) { return x.id !== w.id; });
+          zapiszWpisy();
+          rysujWpisy();
+          rysuj();
+          rysujTeraz();
+          pokazKomunikat("Usunięto wpis.");
+        });
+
+        el.appendChild(d);
+        el.appendChild(t);
+        el.appendChild(usun);
+        lista.appendChild(el);
+      });
+  }
+
+  function escapuj(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  /* ============================================================
+     KOPIA ZAPASOWA — przez pole tekstowe, bo pobieranie plików
+     bywa blokowane w osadzonych podglądach
+     ============================================================ */
+  var pole = document.getElementById("poleDanych");
+  var komunikat = document.getElementById("komunikat");
+  var timerKom = null;
+
+  function pokazKomunikat(txt, blad) {
+    komunikat.textContent = txt;
+    komunikat.className = "komunikat" + (blad ? " blad" : "");
+    if (timerKom) clearTimeout(timerKom);
+    timerKom = setTimeout(function () { komunikat.textContent = ""; }, 4000);
+  }
+
+  document.getElementById("btnEksport").addEventListener("click", function () {
+    pole.value = JSON.stringify(wpisy, null, 2);
+    pole.focus();
+    pole.select();
+    pokazKomunikat(wpisy.length + " wpis(ów) w polu poniżej.");
+  });
+
+  document.getElementById("btnKopiuj").addEventListener("click", function () {
+    if (!pole.value) pole.value = JSON.stringify(wpisy, null, 2);
+    pole.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pole.value).then(
+        function () { pokazKomunikat("Skopiowano do schowka."); },
+        function () { pokazKomunikat("Nie udało się skopiować — zaznacz tekst i użyj Cmd+C.", true); }
+      );
+    } else {
+      pokazKomunikat("Zaznacz tekst w polu i użyj Cmd+C.", true);
+    }
+  });
+
+  document.getElementById("btnImport").addEventListener("click", function () {
+    var txt = pole.value.trim();
+    if (!txt) { pokazKomunikat("Pole jest puste — wklej najpierw zapisane dane.", true); return; }
+    var dane;
+    try { dane = JSON.parse(txt); } catch (e) {
+      pokazKomunikat("To nie wygląda na poprawne dane — sprawdź, czy skopiowałaś cały tekst.", true);
+      return;
+    }
+    if (!Array.isArray(dane)) { pokazKomunikat("Oczekiwana jest lista wpisów.", true); return; }
+
+    var znane = {};
+    UPRAWY.forEach(function (u) { znane[u.id] = true; });
+    var poprawne = dane.filter(function (w) {
+      return w && typeof w.cropId === "string" && znane[w.cropId] &&
+        typeof w.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(w.date);
+    });
+    if (!poprawne.length) { pokazKomunikat("Nie znalazłem żadnego poprawnego wpisu.", true); return; }
+
+    var istniejace = {};
+    wpisy.forEach(function (w) { istniejace[w.id] = true; });
+    var dodane = 0;
+    poprawne.forEach(function (w) {
+      if (!w.id) w.id = "w" + Math.round(Math.random() * 1e9);
+      if (istniejace[w.id]) return;
+      wpisy.push({
+        id: w.id, cropId: w.cropId, action: w.action || "notatka",
+        date: w.date, qty: w.qty || "", note: w.note || ""
+      });
+      dodane++;
+    });
+    zapiszWpisy();
+    rysujWpisy();
+    rysuj();
+    rysujTeraz();
+    pokazKomunikat("Dodano " + dodane + " nowych wpisów (pominięto duplikaty).");
+  });
+
+  /* ============================================================
+     START — ścieżka wspólna z przewodnikiem
+     ============================================================ */
+  var zapisanaSciezka = null;
+  try { zapisanaSciezka = localStorage.getItem(KLUCZ_TRYB); } catch (e) {}
+  if (zapisanaSciezka === "balkon" || zapisanaSciezka === "dzialka") {
+    filtrSciezka = zapisanaSciezka;
+    document.body.dataset.mode = zapisanaSciezka;
+    chipySciezka.forEach(function (c) {
+      c.setAttribute("aria-pressed", String(c.dataset.sciezka === zapisanaSciezka));
+    });
+  }
+
+  rysuj();
+  rysujTeraz();
+  rysujWpisy();
+})();
+</script>

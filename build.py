@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Buduje index.html (pełny dokument dla GitHub Pages) z ogrod.html.
+"""Buduje pełne dokumenty HTML dla GitHub Pages z plików w src/.
 
-ogrod.html jest źródłem prawdy. Jest zapisany w formacie artefaktu
+Pliki w src/ są źródłem prawdy. Są zapisane w formacie artefaktu
 claude.ai, czyli bez <!doctype>, <html>, <head> i <body> — te znaczniki
 dokłada hosting artefaktów w momencie publikacji.
 
@@ -17,48 +17,72 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).parent
-SOURCE = ROOT / "ogrod.html"
-TARGET = ROOT / "index.html"
+SRC = ROOT / "src"
+
+# źródło w src/  ->  (plik wynikowy w katalogu głównym, opis dla meta description)
+STRONY = {
+    "ogrod.html": (
+        "index.html",
+        "Przewodnik na pierwszy sezon warzywny z wyborem ścieżki: "
+        "parapet i balkon w bloku albo grządka na działce.",
+    ),
+    "kalendarz.html": (
+        "kalendarz.html",
+        "Interaktywny kalendarz siewu i zbiorów dla 37 upraw, "
+        "z możliwością zapisywania własnych wysiewów i zbiorów.",
+    ),
+}
 
 SZABLON = """<!doctype html>
 <html lang="pl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Przewodnik na pierwszy sezon warzywny \
-z wyborem ścieżki: parapet i balkon w bloku albo grządka na działce.">
+<meta name="description" content="{opis}">
 <meta name="color-scheme" content="light dark">
 {head}
 </head>
 <body>
-<!-- Ten plik jest generowany przez build.py na podstawie ogrod.html.
-     Nie edytuj go bezpośrednio — zmiany wprowadzaj w ogrod.html. -->
+<!-- Ten plik jest generowany przez build.py na podstawie src/{zrodlo}.
+     Nie edytuj go bezpośrednio — zmiany wprowadzaj w pliku źródłowym. -->
 {body}
 </body>
 </html>
 """
 
 
-def main() -> None:
-    tresc = SOURCE.read_text(encoding="utf-8")
+def zbuduj(zrodlo: str, wynik: str, opis: str) -> None:
+    tresc = (SRC / zrodlo).read_text(encoding="utf-8")
 
     # <title> i <style> należą do <head>, cała reszta do <body>
-    do_glowy = []
+    do_glowy: list[str] = []
 
     def wytnij(wzorzec: str) -> None:
         nonlocal tresc
-        for dopasowanie in re.findall(wzorzec, tresc, flags=re.S | re.I):
-            do_glowy.append(dopasowanie.strip())
+        do_glowy.extend(
+            d.strip() for d in re.findall(wzorzec, tresc, flags=re.S | re.I)
+        )
         tresc = re.sub(wzorzec, "", tresc, flags=re.S | re.I)
 
     wytnij(r"<title>.*?</title>")
     wytnij(r"<style>.*?</style>")
 
-    TARGET.write_text(
-        SZABLON.format(head="\n".join(do_glowy), body=tresc.strip()),
+    cel = ROOT / wynik
+    cel.write_text(
+        SZABLON.format(
+            opis=opis,
+            zrodlo=zrodlo,
+            head="\n".join(do_glowy),
+            body=tresc.strip(),
+        ),
         encoding="utf-8",
     )
-    print(f"Zapisano {TARGET.name} ({TARGET.stat().st_size:,} B)")
+    print(f"src/{zrodlo}  ->  {wynik}  ({cel.stat().st_size:,} B)")
+
+
+def main() -> None:
+    for zrodlo, (wynik, opis) in STRONY.items():
+        zbuduj(zrodlo, wynik, opis)
 
 
 if __name__ == "__main__":
