@@ -1,0 +1,1577 @@
+<title>Od parapetu do grządki</title>
+
+<style>
+/* ============================================================
+   TOKENY — jasny motyw jest bazą, oba akcenty żyją w :root
+   ============================================================ */
+:root {
+  --paper:    #EDEEE7;
+  --paper-2:  #F7F8F3;
+  --paper-3:  #E3E5DB;
+  --ink:      #191E14;
+  --ink-2:    #454D3E;
+  --muted:    #737B69;
+  --rule:     #D0D4C6;
+  --rule-2:   #BFC4B3;
+
+  --leaf:     #3D6B31;
+  --leaf-soft:#E0E8DA;
+  --enamel:   #235B76;
+  --enamel-soft:#DBE6EB;
+  --amber:    #96671A;
+  --amber-soft:#EEE6D2;
+
+  --accent:      var(--leaf);
+  --accent-soft: var(--leaf-soft);
+
+  --display: "Superclarendon", "Rockwell", "Bookman Old Style", Georgia, "Times New Roman", serif;
+  --body: "Optima", "Avenir Next", "Gill Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --shell: 1120px;
+  --prose: 64ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:    #13160F;
+    --paper-2:  #1B1F16;
+    --paper-3:  #232819;
+    --ink:      #E9ECE1;
+    --ink-2:    #BCC2B0;
+    --muted:    #8B9380;
+    --rule:     #2E3427;
+    --rule-2:   #3D4534;
+
+    --leaf:     #93C57A;
+    --leaf-soft:#212E1B;
+    --enamel:   #7CB9D2;
+    --enamel-soft:#152730;
+    --amber:    #DCAC52;
+    --amber-soft:#2A2314;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:    #13160F;
+  --paper-2:  #1B1F16;
+  --paper-3:  #232819;
+  --ink:      #E9ECE1;
+  --ink-2:    #BCC2B0;
+  --muted:    #8B9380;
+  --rule:     #2E3427;
+  --rule-2:   #3D4534;
+
+  --leaf:     #93C57A;
+  --leaf-soft:#212E1B;
+  --enamel:   #7CB9D2;
+  --enamel-soft:#152730;
+  --amber:    #DCAC52;
+  --amber-soft:#2A2314;
+}
+
+/* przełącznik ścieżki zmienia akcent całej strony */
+body[data-mode="balkon"] { --accent: var(--enamel); --accent-soft: var(--enamel-soft); }
+body[data-mode="dzialka"] { --accent: var(--leaf); --accent-soft: var(--leaf-soft); }
+
+/* ============================================================
+   PODSTAWY
+   ============================================================ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.12;
+  text-wrap: balance;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+p { margin: 0; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.shell {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: 28px;
+}
+@media (max-width: 640px) { .shell { padding-inline: 18px; } }
+
+.prose { max-width: var(--prose); }
+
+.stack { display: flex; flex-direction: column; }
+.stack-s  { gap: 10px; }
+.stack-m  { gap: 18px; }
+.stack-l  { gap: 30px; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lead { font-size: 20px; line-height: 1.5; color: var(--ink-2); }
+.small { font-size: 14.5px; color: var(--ink-2); }
+.tiny { font-size: 13px; color: var(--muted); }
+
+/* ============================================================
+   NAGŁÓWEK STRONY
+   ============================================================ */
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  padding: 68px 0 46px;
+  background:
+    linear-gradient(to bottom, var(--accent-soft), transparent 70%);
+}
+
+.masthead .kicker {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 22px;
+}
+
+.masthead h1 {
+  font-size: clamp(42px, 8.2vw, 82px);
+  letter-spacing: -0.025em;
+  max-width: 14ch;
+}
+
+.masthead .lead { margin-top: 22px; max-width: 56ch; }
+
+.source-note {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  font-size: 13.5px;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+/* ============================================================
+   WYBÓR ŚCIEŻKI
+   ============================================================ */
+.chooser { padding: 52px 0 10px; }
+
+.chooser-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.path-card {
+  appearance: none;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 24px 24px 22px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color .18s, background .18s, transform .18s;
+}
+.path-card:hover { border-color: var(--rule-2); transform: translateY(-2px); }
+
+.path-card .pc-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.path-card svg { flex: none; }
+.path-card h3 { font-size: 21px; }
+.path-card p { font-size: 15px; color: var(--ink-2); }
+.path-card .pc-state {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.path-card[aria-pressed="true"] {
+  border-color: var(--pc-color);
+  background: var(--pc-soft);
+  box-shadow: inset 0 0 0 1px var(--pc-color);
+}
+.path-card[aria-pressed="true"] .pc-state { color: var(--pc-color); }
+.path-card[data-set="balkon"]  { --pc-color: var(--enamel); --pc-soft: var(--enamel-soft); }
+.path-card[data-set="dzialka"] { --pc-color: var(--leaf);   --pc-soft: var(--leaf-soft); }
+.path-card svg { color: var(--pc-color); }
+
+/* pasek stanu, przyklejony */
+.statusbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin-top: 34px;
+}
+.statusbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 11px 0;
+}
+.statusbar .now {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.statusbar .swap {
+  margin-left: auto;
+  font: inherit;
+  font-size: 13.5px;
+  background: none;
+  border: 1px solid var(--rule-2);
+  border-radius: 100px;
+  padding: 5px 14px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.statusbar .swap:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ============================================================
+   SEKCJE — numerowany ciąg kroków (to naprawdę jest sekwencja)
+   ============================================================ */
+.step {
+  padding: 62px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.step-head {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 0 22px;
+  align-items: start;
+  margin-bottom: 30px;
+}
+.step-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  padding-top: 9px;
+  border-top: 2px solid var(--accent);
+}
+.step-head h2 { font-size: clamp(27px, 4vw, 38px); }
+.step-head .sub { grid-column: 2; margin-top: 12px; color: var(--ink-2); max-width: var(--prose); }
+
+@media (max-width: 620px) {
+  .step-head { grid-template-columns: 1fr; gap: 12px; }
+  .step-head .sub { grid-column: 1; }
+  .step-num { justify-self: start; padding-right: 40px; }
+}
+
+.body-grid {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 0 22px;
+}
+.body-grid > * { grid-column: 2; }
+@media (max-width: 620px) {
+  .body-grid { grid-template-columns: 1fr; }
+  .body-grid > * { grid-column: 1; }
+}
+
+/* ============================================================
+   ELEMENTY TREŚCI
+   ============================================================ */
+.note {
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 16px 20px;
+  border-radius: 0 3px 3px 0;
+  font-size: 15.5px;
+}
+.note strong { font-family: var(--display); font-weight: 600; }
+
+.warn {
+  border-left: 2px solid var(--amber);
+  background: var(--amber-soft);
+  padding: 16px 20px;
+  border-radius: 0 3px 3px 0;
+  font-size: 15.5px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.card h4 { font-size: 17px; }
+.card p { font-size: 14.5px; color: var(--ink-2); }
+.card .tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+ul.ticks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
+ul.ticks li {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  font-size: 15.5px;
+  color: var(--ink-2);
+}
+ul.ticks li::before {
+  content: "";
+  width: 9px; height: 9px;
+  margin-top: 8px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+}
+ul.ticks li strong { color: var(--ink); font-weight: 600; }
+
+/* specyfikacja — arkusz zielnikowy */
+.spec {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 18px;
+  font-size: 13.5px;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  margin-top: 2px;
+}
+.spec dt {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 2px;
+}
+.spec dd { margin: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* siatka warzyw */
+.crop-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+  align-items: center;
+}
+.chip {
+  font: inherit;
+  font-size: 13.5px;
+  background: none;
+  border: 1px solid var(--rule-2);
+  color: var(--ink-2);
+  border-radius: 100px;
+  padding: 5px 14px;
+  cursor: pointer;
+}
+.chip[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.crops {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 14px;
+}
+.crop {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.crop.hidden { display: none; }
+.crop-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.crop h4 { font-size: 18px; }
+.crop .lvl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  white-space: nowrap;
+  background: var(--paper-3);
+  color: var(--muted);
+}
+.crop .lvl[data-lvl="łatwe"] { background: var(--leaf-soft); color: var(--leaf); }
+.crop .why { font-size: 14.5px; color: var(--ink-2); }
+
+/* kalendarz */
+.months {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 12px;
+}
+.month {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 15px 16px;
+  background: var(--paper-2);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.month.is-now {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  background: var(--accent-soft);
+}
+.month-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--display);
+  font-size: 17px;
+}
+.month .here {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.month ul { margin: 0; padding-left: 16px; font-size: 14px; color: var(--ink-2); display: flex; flex-direction: column; gap: 4px; }
+.month li::marker { color: var(--rule-2); }
+
+/* rysunki */
+figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { font-size: 13.5px; color: var(--muted); max-width: 62ch; }
+.figbox {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper-2);
+  padding: 22px;
+  overflow-x: auto;
+}
+
+/* lista kontrolna */
+.check {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.check label {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 15.5px;
+  color: var(--ink-2);
+}
+.check label:hover { background: var(--paper-2); }
+.check input { margin-top: 4px; accent-color: var(--accent); width: 15px; height: 15px; }
+.check input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--rule-2); }
+
+/* tabela problemów */
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 3px; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 560px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--paper-2);
+  font-weight: 400;
+}
+tbody tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+
+/* stopka */
+.colophon { padding: 54px 0 76px; }
+.sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 20px; }
+.source {
+  border-top: 2px solid var(--rule-2);
+  padding-top: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.source .t { font-family: var(--display); font-size: 15.5px; color: var(--ink); }
+.source .a { font-size: 13px; color: var(--muted); }
+
+/* widoczność ścieżek — chowamy tylko to, co nie pasuje,
+   żeby elementy pasujące zachowały swój własny display */
+body:not([data-mode]) [data-only],
+body[data-mode="balkon"] [data-only="dzialka"],
+body[data-mode="dzialka"] [data-only="balkon"] { display: none; }
+
+body:not([data-mode]) .needs-mode { display: none; }
+body[data-mode] .no-mode-yet { display: none; }
+
+/* rysunki w SVG — kolory i typografia przez klasy, nie przez
+   atrybuty prezentacyjne (var() nie jest tam pewne we wszystkich
+   przeglądarkach) */
+.dg-body { font-family: var(--body); font-size: 12px; }
+.dg-disp { font-family: var(--display); font-size: 14px; }
+.dg-mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; }
+.dg-ink   { fill: var(--ink); }
+.dg-ink2  { fill: var(--ink-2); }
+.dg-muted { fill: var(--muted); }
+.dg-acc   { fill: var(--accent); }
+.f-paper  { fill: var(--paper); }
+.f-paper3 { fill: var(--paper-3); }
+.f-soft   { fill: var(--accent-soft); }
+.f-amber  { fill: var(--amber-soft); }
+.f-none   { fill: none; }
+.s-rule   { stroke: var(--rule); }
+.s-rule2  { stroke: var(--rule-2); }
+.s-ink2   { stroke: var(--ink-2); }
+.s-muted  { stroke: var(--muted); }
+.s-acc    { stroke: var(--accent); }
+.f-acc    { fill: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<header class="masthead">
+  <div class="shell">
+    <div class="kicker">Przewodnik na pierwszy sezon</div>
+    <h1>Od parapetu do grządki</h1>
+    <p class="lead">Wszystko, co trzeba ustalić, zanim wsypiesz ziemię do pierwszej doniczki: ile masz słońca, w czym sadzić, co posiać, żeby faktycznie coś zebrać, i co robić w każdym miesiącu roku.</p>
+    <p class="source-note">Opracowane na podstawie czterech książek Huwa Richardsa (<em>Veg in One Bed</em>, <em>Grow Food for Free</em>, <em>The Vegetable Grower&rsquo;s Handbook</em>, <em>The Self-Sufficiency Garden</em>), z terminami przesuniętymi na polski klimat. Pełna lista źródeł na dole strony.</p>
+  </div>
+</header>
+
+<section class="chooser">
+  <div class="shell">
+    <div class="eyebrow">Zacznij tutaj</div>
+    <h2 style="font-size: clamp(24px, 4vw, 32px); margin-top: 10px;">Gdzie będzie rósł ten ogród?</h2>
+    <p class="small" style="margin-top: 10px; max-width: 60ch;">Reszta strony dopasuje się do wyboru &mdash; inne pojemniki, inne warzywa, inny kalendarz. Możesz przełączyć w każdej chwili.</p>
+
+    <div class="chooser-grid">
+      <button class="path-card" data-set="balkon" aria-pressed="false">
+        <div class="pc-top">
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+            <rect x="4.5" y="3.5" width="25" height="17" rx="1" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M17 3.5v17M4.5 12h25" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M2 20.5h30" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M9 20.5v4.5h6v-4.5M19 20.5v4.5h6v-4.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M12 20.5c0-3 2-4.5 2-4.5M22 20.5c0-2.5-1.8-4-1.8-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <h3>Mieszkanie w bloku</h3>
+        </div>
+        <p>Parapet, balkon, ewentualnie kawałek loggii. Wszystko rośnie w pojemnikach, wodę nosisz w konewce, a ślimaków praktycznie nie ma.</p>
+        <span class="pc-state">Wybierz tę ścieżkę</span>
+      </button>
+
+      <button class="path-card" data-set="dzialka" aria-pressed="false">
+        <div class="pc-top">
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+            <path d="M3 22.5h28M3 22.5v6h28v-6" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9 22.5v6M17 22.5v6M25 22.5v6" stroke="currentColor" stroke-width="1"/>
+            <path d="M8 22.5c0-5 2.5-7.5 2.5-7.5M13.5 22.5c0-4 2-6 2-6M19.5 22.5c0-5.5 2.5-8 2.5-8M25 22.5c0-4 2-6.5 2-6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M6 12.5l3-3 3 3M18 9.5l3-3 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Działka albo ogród</h3>
+        </div>
+        <p>Kawałek gruntu, na którym da się postawić podwyższoną grządkę i kompostownik. Więcej pracy na starcie, dużo większy plon.</p>
+        <span class="pc-state">Wybierz tę ścieżkę</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="statusbar needs-mode">
+    <div class="shell statusbar-inner">
+      <span class="now" id="statusNow">&mdash;</span>
+      <button class="swap" id="swapBtn">Zmień ścieżkę</button>
+    </div>
+  </div>
+</section>
+
+<div class="no-mode-yet shell" style="padding: 46px 0 90px;">
+  <p class="tiny">↑ Wybierz jedną z dwóch ścieżek, żeby zobaczyć resztę przewodnika.</p>
+</div>
+
+<main class="needs-mode">
+
+<!-- ==========================================================
+     01 — OCEŃ MIEJSCE
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">01</div>
+      <h2 data-only="balkon">Policz godziny słońca</h2>
+      <h2 data-only="dzialka">Oceń teren, zanim cokolwiek wbijesz w ziemię</h2>
+      <p class="sub" data-only="balkon">To jedyna rzecz, której nie da się obejść. Ziemię można dokupić, doniczkę wystrugać z kartonu &mdash; słońca nie da się dostawić. Zanim zamówisz nasiona, sprawdź, ile go realnie masz.</p>
+      <p class="sub" data-only="dzialka">Huw Richards używa skrótu SWAGA &mdash; pięciu rzeczy, które trzeba sprawdzić na działce, zanim zapadną jakiekolwiek decyzje. Zajmie to jedno popołudnie i oszczędzi cały sezon.</p>
+    </div>
+
+    <div class="body-grid stack stack-l">
+
+      <div data-only="balkon" class="stack stack-m">
+        <ul class="ticks">
+          <li><strong>Sprawdź stronę świata.</strong> Południe jest najlepsze, potem wschód. Aplikacja z kompasem w telefonie wystarczy. Zachód też zadziała, tylko rośliny dostaną upał popołudniowy zamiast łagodnego porannego światła.</li>
+          <li><strong>Cztery godziny bezpośredniego słońca to próg.</strong> Poniżej tego odpuść pomidory i paprykę. Powyżej &mdash; utrzymasz prawie wszystko, co jest na tej stronie.</li>
+          <li><strong>Zmierz to naprawdę.</strong> W słoneczny dzień zrób zdjęcie balkonu co godzinę od 8 do 18. Po jednym dniu dokładnie wiesz, gdzie stawiać pomidory, a gdzie sałatę.</li>
+          <li><strong>Sprawdź wiatr.</strong> Balkon na dziesiątym piętrze potrafi położyć fasolę. Osłona z siatki cieniującej albo ustawienie doniczek przy ścianie rozwiązuje sprawę.</li>
+          <li><strong>Sprawdź nośność i regulamin.</strong> Doniczka 30-litrowa z mokrą ziemią waży ok. 35 kg. Na balkonach w blokach zwykle nie ma z tym problemu, ale warto wiedzieć, ile stawiasz.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Jedna dobra wiadomość:</strong> na balkonie powyżej parteru praktycznie nie ma ślimaków &mdash; największego wroga sałaty i młodych sadzonek w gruncie. Chyba że przywieziesz je sam, w ziemi z kupionej sadzonki.
+        </div>
+
+        <figure>
+          <div class="figbox">
+            <svg viewBox="0 0 700 340" role="img" aria-labelledby="balkonTytul">
+              <title id="balkonTytul">Przekrój balkonu: gdzie co postawić w zależności od nasłonecznienia</title>
+              <!-- ściana z oknem -->
+              <rect x="60" y="40" width="150" height="250" class="f-paper3 s-rule2" stroke-width="1.2"/>
+              <rect x="88" y="72" width="94" height="110" class="f-paper s-rule2" stroke-width="1.2"/>
+              <line x1="135" y1="72" x2="135" y2="182" class="s-rule2" stroke-width="1.2"/>
+              <rect x="80" y="182" width="110" height="10" class="f-soft s-acc" stroke-width="1.2"/>
+              <!-- doniczki na parapecie -->
+              <g class="f-acc" opacity="0.85">
+                <rect x="90" y="168" width="18" height="14" rx="1"/>
+                <rect x="115" y="168" width="18" height="14" rx="1"/>
+                <rect x="140" y="168" width="18" height="14" rx="1"/>
+                <rect x="163" y="168" width="18" height="14" rx="1"/>
+              </g>
+              <!-- podłoga balkonu -->
+              <rect x="210" y="285" width="430" height="8" class="f-paper3 s-rule2" stroke-width="1.2"/>
+              <!-- barierka -->
+              <line x1="620" y1="150" x2="620" y2="285" class="s-rule2" stroke-width="1.6"/>
+              <line x1="440" y1="150" x2="640" y2="150" class="s-rule2" stroke-width="1.6"/>
+              <g class="s-rule" stroke-width="1">
+                <line x1="470" y1="150" x2="470" y2="285"/><line x1="500" y1="150" x2="500" y2="285"/>
+                <line x1="530" y1="150" x2="530" y2="285"/><line x1="560" y1="150" x2="560" y2="285"/>
+                <line x1="590" y1="150" x2="590" y2="285"/>
+              </g>
+              <!-- skrzynka na barierce -->
+              <rect x="475" y="122" width="140" height="26" rx="2" class="f-soft s-acc" stroke-width="1.4"/>
+              <g class="f-none s-acc" stroke-width="1.6" stroke-linecap="round">
+                <path d="M495 122c0-12 4-18 4-18M520 122c0-14 5-20 5-20M545 122c0-11 4-17 4-17M570 122c0-14 5-19 5-19M595 122c0-11 4-16 4-16"/>
+              </g>
+              <!-- duże donice na podłodze -->
+              <path d="M250 285 L262 218 L318 218 L330 285 Z" class="f-soft s-acc" stroke-width="1.4"/>
+              <line x1="290" y1="126" x2="290" y2="218" class="s-rule2" stroke-width="1" stroke-dasharray="3 3"/>
+              <path d="M290 218 L290 150 M290 175c-14 0-22-12-22-12M290 195c14 0 22-14 22-14" class="f-none s-acc" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M355 285 L364 232 L410 232 L419 285 Z" class="f-soft s-acc" stroke-width="1.4"/>
+              <path d="M387 232c0-16-10-22-10-22M387 232c0-20 11-27 11-27" class="f-none s-acc" stroke-width="1.6" stroke-linecap="round"/>
+              <!-- etykiety -->
+              <g class="dg-mono dg-muted">
+                <text x="66" y="214">PARAPET</text>
+                <text x="228" y="312">PODŁOGA BALKONU</text>
+                <text x="475" y="112">BARIERKA</text>
+              </g>
+              <g class="dg-body dg-ink2">
+                <text x="66" y="234">rozsada, zioła,</text>
+                <text x="66" y="250">bazylia, mikrolistki</text>
+                <text x="228" y="330">ziemniaki 30 l, pomidory 20–25 l</text>
+                <text x="475" y="98">sałaty, rukola, rzodkiewka</text>
+              </g>
+              <g class="dg-mono dg-acc">
+                <text x="300" y="120">PODPORA 1,5 M</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Trzy poziomy, trzy różne zadania. Parapet daje ciepło i osłonę, więc idzie tam rozsada i zioła. Barierka daje najwięcej światła przy najmniejszej głębokości &mdash; idealna pod sałaty. Podłoga to jedyne miejsce na duże, ciężkie donice.</figcaption>
+        </figure>
+      </div>
+
+      <div data-only="dzialka" class="stack stack-m">
+        <div class="cards">
+          <div class="card">
+            <span class="tag">S &mdash; Skala</span>
+            <h4>Mniej, niż myślisz</h4>
+            <p>Powierzchnia 1 × 2 m wystarczy, żeby czteroosobowa rodzina jadła własne sałaty od maja do października. Standardowe miejsce parkingowe (3 × 4 m) to już bardzo przyzwoity pierwszy ogród.</p>
+          </div>
+          <div class="card">
+            <span class="tag">W &mdash; Woda</span>
+            <h4>Skąd i jak daleko</h4>
+            <p>Woda jest ciężka i nosi się ją codziennie przez pół lata. Sprawdź, ile kroków dzieli kran od grządki. Beczka pod rynną altany to najtańsza inwestycja, jaką zrobisz.</p>
+          </div>
+          <div class="card">
+            <span class="tag">A &mdash; Aspekt</span>
+            <h4>Strona świata</h4>
+            <p>Południe daje największy wybór roślin, wschód jest drugi. Cztery godziny bezpośredniego słońca dziennie wystarczą większości warzyw. Zacienione miejsca oddaj liściastym &mdash; nie mają nic przeciwko.</p>
+          </div>
+          <div class="card">
+            <span class="tag">G &mdash; Grunt</span>
+            <h4>Co jest pod spodem</h4>
+            <p>Trawnik daje najwięcej opcji: możesz kopać albo postawić grządkę na wierzchu. Na betonie lub kostce zostają podwyższone grządki i pojemniki &mdash; i to zupełnie wystarcza.</p>
+          </div>
+          <div class="card">
+            <span class="tag">A &mdash; Access</span>
+            <h4>Dojazd</h4>
+            <p>Najczęściej pomijany punkt. Metr sześcienny ziemi trzeba jakoś przewieźć na miejsce. Jeśli jedyna droga prowadzi przez wąską furtkę, lepiej wiedzieć o tym przed zamówieniem.</p>
+          </div>
+        </div>
+
+        <div class="note">
+          <strong>Jeśli masz dwa miejsca do wyboru:</strong> to bliższe domu przeznacz na rzeczy, które odwiedzasz codziennie &mdash; sałaty, zioła, rzodkiewkę. Dalsze na te, które wymagają uwagi raz na tydzień: ziemniaki, jarmuż, pory.
+        </div>
+
+        <div class="warn">
+          <strong>Cień to nie porażka.</strong> Zacieniony róg jest najlepszym miejscem na kompostownik i zbiornik na wodę &mdash; kompost nie potrzebuje słońca, a woda w cieniu dłużej zostaje czysta i chłodna. Marnowanie nasłonecznionego metra na pojemniki jest błędem. A w samym cieniu i tak urośnie sałata, szpinak, jarmuż, boćwina, natka i kapusta.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     02 — W CZYM ROSNĄĆ
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">02</div>
+      <h2 data-only="balkon">Zbierz pojemniki (prawie za darmo)</h2>
+      <h2 data-only="dzialka">Zbuduj jedną podwyższoną grządkę</h2>
+      <p class="sub" data-only="balkon">Cała książka <em>Grow Food for Free</em> stoi na jednym założeniu: pojemnik to rzecz, która trzyma ziemię i ma dziurę w dnie. Reszta to marketing sklepów ogrodniczych.</p>
+      <p class="sub" data-only="dzialka">Nie rozkopuj całej działki w pierwszym roku. Jedna grządka 3 × 1,2 m, głęboka na 30 cm, to dokładnie tyle, ile początkujący jest w stanie ogarnąć &mdash; i wystarczy na zaskakująco dużo jedzenia.</p>
+    </div>
+
+    <div class="body-grid stack stack-l">
+
+      <div data-only="balkon" class="stack stack-m">
+        <h3 style="font-size: 20px;">Na rozsadę &mdash; wszystko biodegradowalne</h3>
+        <ul class="ticks">
+          <li><strong>Rolki po papierze toaletowym.</strong> Głębokie, więc idealne dla grochu i fasoli, które puszczają długi korzeń. Natnij dół w czterech miejscach na 2,5 cm i zawiń do środka &mdash; masz dno. Sadzisz razem z rolką.</li>
+          <li><strong>Wytłaczanki po jajkach.</strong> Gotowa paleta modułów. Kapustne, sałaty, groch i zioła roczne kiełkują w nich bez problemu. Odrywasz pojedynczą komorę i sadzisz w całości.</li>
+          <li><strong>Kubki po jogurcie i puszki.</strong> Wytrzymują trzy do pięciu sezonów. Trzeba przebić dziurki w dnie &mdash; to jedyny warunek.</li>
+          <li><strong>Kawałek rynny.</strong> Wysiewasz groch w rynnie na parapecie, a potem zsuwasz cały rządek do skrzynki. Najbardziej satysfakcjonująca czynność w całym ogrodnictwie.</li>
+        </ul>
+
+        <h3 style="font-size: 20px; margin-top: 12px;">Na dorosłe rośliny</h3>
+        <ul class="ticks">
+          <li><strong>Skrzynki balkonowe i płaskie kartony wyłożone folią.</strong> Sałaty nie korzenią się głęboko, więc szeroki i płytki pojemnik jest lepszy niż wysoki &mdash; zużywa mniej ziemi przy tym samym plonie. Karton po zbiorze idzie do kompostu.</li>
+          <li><strong>Wiadra po farbie lub z gastronomii.</strong> Umyj, przewierć dno, gotowe. Te z pałąkiem możesz przenosić w cień, gdy w lipcu leje się żar.</li>
+          <li><strong>Kartony po mleku przywiązane do barierki.</strong> Utnij dno, zawieś dnem do góry, przebij dziurkę w zakrętce. Sprawdza się właśnie na balkonach.</li>
+          <li><strong>Kosze i skrzynki po owocach.</strong> Wyłóż jutą albo workiem po ziemi &mdash; przepuszczają wodę i wyglądają lepiej niż wiadro.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Jedyna zasada, której nie da się obejść:</strong> dziury w dnie. Bez odpływu ziemia zakwasza się w kilka dni i korzenie gniją. Na dno warstwa kamyków dla lepszego drenażu, na to ziemia.
+        </div>
+
+        <div class="warn">
+          <strong>Pojemniki wysychają szybciej niż grunt.</strong> To główny powód, dla którego balkonowe uprawy padają. W upalny, słoneczny tydzień większość doniczek trzeba podlewać codziennie &mdash; zaplanuj to, zanim kupisz dwadzieścia doniczek.
+        </div>
+      </div>
+
+      <div data-only="dzialka" class="stack stack-m">
+        <ul class="ticks">
+          <li><strong>Rozmiar: 3 × 1,2 m, głębokość 30 cm.</strong> Szerokość 1,2 m pozwala dosięgnąć środka z obu stron, więc nigdy nie stajesz na ziemi i jej nie ubijasz. Głębokość 30 cm wystarczy praktycznie każdemu warzywu.</li>
+          <li><strong>Materiał.</strong> Deski tarasowe z recyklingu żyją dziesiątki lat i nic nie oddają do gleby. Deski szalunkowe są najtańsze, ale wytrzymują ok. 5 lat. Drewno impregnowane trzyma dłużej &mdash; sprawdź tylko, czym jest impregnowane.</li>
+          <li><strong>Na betonie też można.</strong> Wtedy nie wbijasz palików w grunt, tylko dajesz je do środka narożników i używasz sztywniejszego materiału (gruba deska liściasta albo cegła).</li>
+          <li><strong>Wypełnienie.</strong> Jeden metr sześcienny ziemi urodzajnej wypełnia taką grządkę, zostawiając ok. 5 cm zapasu pod krawędzią. Jeśli dostaniesz zwykłą ziemię bez dodatków: napełnij do 8 cm od góry, dosyp 5 cm kompostu bez torfu i wymieszaj widłami górne 15&ndash;20 cm.</li>
+          <li><strong>Sprawdź pH.</strong> Prosty test ze sklepu ogrodniczego. Warzywom najlepiej jest przy 6,5; wszystko między 6 a 7,5 jest w porządku. Rzadko wypada inaczej, ale lepiej wiedzieć przed zamówieniem ciężarówki ziemi.</li>
+        </ul>
+
+        <figure>
+          <div class="figbox">
+            <svg viewBox="0 0 720 300" role="img" aria-labelledby="grzadkaTytul">
+              <title id="grzadkaTytul">Plan podwyższonej grządki 3 × 1,2 m podzielonej na 10 sekcji po 30 cm</title>
+              <!-- bloki upraw -->
+              <rect x="52" y="58" width="616" height="150" class="f-paper3"/>
+              <rect x="52" y="58" width="246.4" height="150" class="f-soft" opacity="0.9"/>
+              <rect x="298.4" y="58" width="123.2" height="150" class="f-amber" opacity="0.9"/>
+              <rect x="421.6" y="58" width="123.2" height="150" class="f-soft" opacity="0.55"/>
+              <rect x="544.8" y="58" width="123.2" height="150" class="f-amber" opacity="0.55"/>
+              <g class="s-rule2" stroke-width="1" stroke-dasharray="4 4">
+                <line x1="113.6" y1="58" x2="113.6" y2="208"/><line x1="175.2" y1="58" x2="175.2" y2="208"/>
+                <line x1="236.8" y1="58" x2="236.8" y2="208"/><line x1="298.4" y1="58" x2="298.4" y2="208"/>
+                <line x1="360" y1="58" x2="360" y2="208"/><line x1="421.6" y1="58" x2="421.6" y2="208"/>
+                <line x1="483.2" y1="58" x2="483.2" y2="208"/><line x1="544.8" y1="58" x2="544.8" y2="208"/>
+                <line x1="606.4" y1="58" x2="606.4" y2="208"/>
+              </g>
+              <rect x="52" y="58" width="616" height="150" class="f-none s-ink2" stroke-width="2" rx="2"/>
+
+              <!-- numery sekcji -->
+              <g class="dg-mono dg-muted" text-anchor="middle">
+                <text x="82.8" y="228">1</text><text x="144.4" y="228">2</text><text x="206" y="228">3</text>
+                <text x="267.6" y="228">4</text><text x="329.2" y="228">5</text><text x="390.8" y="228">6</text>
+                <text x="452.4" y="228">7</text><text x="514" y="228">8</text><text x="575.6" y="228">9</text>
+                <text x="637.2" y="228">10</text>
+              </g>
+
+              <!-- podpisy bloków -->
+              <g class="dg-disp dg-ink" text-anchor="middle">
+                <text x="175" y="120">Ziemniaki</text>
+                <text x="360" y="120">Sałata</text>
+                <text x="483" y="120">Rzepa</text>
+                <text x="606" y="120">Por</text>
+              </g>
+              <g class="dg-body dg-ink2" text-anchor="middle" font-size="11.5">
+                <text x="175" y="140">kwiecień → lipiec</text>
+                <text x="360" y="140">kwiecień → czerwiec</text>
+                <text x="483" y="140">maj → lipiec</text>
+                <text x="606" y="140">siew V, zbiór XI–II</text>
+              </g>
+              <g class="dg-mono dg-acc" text-anchor="middle">
+                <text x="175" y="170">POTEM: SZPINAK</text>
+                <text x="360" y="170">POTEM: JARMUŻ</text>
+                <text x="483" y="170">POTEM: SAŁATA</text>
+              </g>
+
+              <!-- wymiary -->
+              <g class="s-muted" stroke-width="1">
+                <line x1="52" y1="42" x2="668" y2="42"/>
+                <line x1="52" y1="37" x2="52" y2="47"/><line x1="668" y1="37" x2="668" y2="47"/>
+                <line x1="34" y1="58" x2="34" y2="208"/>
+                <line x1="29" y1="58" x2="39" y2="58"/><line x1="29" y1="208" x2="39" y2="208"/>
+              </g>
+              <g class="dg-mono dg-muted">
+                <text x="360" y="33" text-anchor="middle">3 M — 10 SEKCJI PO 30 CM</text>
+                <text x="24" y="133" text-anchor="middle" transform="rotate(-90 24 133)">1,2 M</text>
+              </g>
+              <g class="dg-body dg-muted">
+                <text x="52" y="262">Cztery uprawy, dwa plony z tej samej ziemi. Kiedy ziemniaki schodzą w lipcu, szpinak</text>
+                <text x="52" y="280">czeka już na parapecie i wchodzi na ich miejsce następnego dnia.</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Plan &bdquo;minimum wysiłku&rdquo; z <em>Veg in One Bed</em>: tylko pięć gatunków, każdy w dużej ilości i z długim okresem zbioru. Podział grządki na dziesięć trzydziestocentymetrowych sekcji ułatwia planowanie &mdash; oznacz je sznurkiem albo etykietami.</figcaption>
+        </figure>
+
+        <div class="note">
+          <strong>Dlaczego akurat podwyższona grządka:</strong> ziemia w niej wiosną nagrzewa się szybciej niż grunt, po ulewie lepiej odprowadza wodę, nie da się jej przypadkiem zadeptać, a całą konstrukcję można rozebrać i zabrać przy przeprowadzce. To ostatnie ma znaczenie przy wynajmie.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     03 — ZIEMIA
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">03</div>
+      <h2>Ziemia, czyli jedyna rzecz, na której nie warto oszczędzać</h2>
+      <p class="sub">Rośliny nie żywią się samodzielnie. Żyją w układzie z bakteriami i grzybami mikoryzowymi, które dostarczają im wodę i składniki w zamian za cukry z korzeni. Wszystko, co robisz z ziemią, robisz tak naprawdę dla nich.</p>
+    </div>
+
+    <div class="body-grid stack stack-l">
+
+      <div data-only="balkon" class="stack stack-m">
+        <ul class="ticks">
+          <li><strong>Kup ziemię uniwersalną bez torfu.</strong> Torf jest wydobywany z torfowisk, które są magazynem węgla i siedliskiem &mdash; a w doniczce nie robi nic, czego nie zrobi kompost.</li>
+          <li><strong>Do ziół dosyp gruzu.</strong> Tymianek, rozmaryn i oregano chcą przepuszczalnego podłoża: jedna garść grubego żwiru na dwie–trzy garście ziemi. Bez tego gniją zimą.</li>
+          <li><strong>Nie wyrzucaj ziemi po sezonie.</strong> Zużyta ziemia z doniczek wymieszana pół na pół ze świeżym kompostem świetnie nadaje się na kolejny rok. W pełni wyeksploatowana idzie na dno dużych donic albo do kompostu.</li>
+          <li><strong>Kompostowanie na balkonie jest możliwe.</strong> Wermikompostownik (z dżdżownicami) mieści się pod stołem, nie śmierdzi, jeśli nie wrzucasz mięsa i nabiału, i daje najlepszy kompost, jaki istnieje.</li>
+        </ul>
+        <div class="note">
+          <strong>Kubeł na resztki kuchenne od pierwszego dnia.</strong> Zwykłe wiadro 10 l z pokrywką i uchwytem. Obierki, fusy z kawy, skorupki &mdash; to jest surowiec, nie śmieć. Nawet jeśli oddajesz je do miejskiego bioodpadu, nawyk zbierania przydaje się od razu.
+        </div>
+      </div>
+
+      <div data-only="dzialka" class="stack stack-m">
+        <ul class="ticks">
+          <li><strong>Nie przekopuj.</strong> Metoda no-dig polega na tym, że materię organiczną kładziesz na wierzch, zamiast wkopywać. Warstwa 2&ndash;3 cm kompostu na powierzchni grządki raz w roku &mdash; to cała roczna &bdquo;uprawa gleby&rdquo;. Możesz to zrobić o dowolnej porze roku, na pustej albo obsadzonej grządce.</li>
+          <li><strong>Ściółka pracuje za ciebie.</strong> Przykryta ziemia zatrzymuje wilgoć, nie zarasta chwastami i karmi życie glebowe, gdy ściółka się rozkłada. Odsłonięta ziemia to zaproszenie dla chwastów.</li>
+          <li><strong>Kompostownik: minimum 1 × 1 m.</strong> Poniżej tego rozmiaru środek pryzmy nie nagrzewa się wystarczająco i kompost powstaje latami. Ze skrzyni tej wielkości wychodzi tyle kompostu, żeby wyściółkować cztery–pięć grządek 1,2 × 3 m.</li>
+          <li><strong>Skąd brać materiał.</strong> Fusy z kawy z kawiarni (Huw odbiera je z trzech–czterech lokali tygodniowo), liście z jesieni, skoszona trawa, słoma, kartony bez taśmy, obierki. To wszystko jest za darmo i zwykle ktoś się cieszy, że to zabierasz.</li>
+          <li><strong>Zrębki drzewne dojrzewają rok, dwa.</strong> Świeżych nie kładź pod warzywa jednoroczne &mdash; niech najpierw poleżą w kącie. Ten kąt to właśnie to zacienione miejsce, na którym i tak nic by nie urosło.</li>
+        </ul>
+        <div class="note">
+          <strong>Grzyby mikoryzowe pod deską</strong> &mdash; biała, pajęczynowata sieć w ziemi &mdash; to najlepszy sygnał, że gleba jest zdrowa. Syntetyczne nawozy, opryski i głębokie przekopywanie to życie niszczą.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     04 — CO POSIAĆ
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">04</div>
+      <h2>Co posiać w pierwszym roku</h2>
+      <p class="sub">Wybrane pod jednym kątem: żeby dało się je zebrać. Wszystkie liczby &mdash; głębokość siewu, rozstawa, czas do zbioru &mdash; pochodzą z tabel Huwa Richardsa. Terminy przesunięte na polski klimat.</p>
+    </div>
+
+    <div class="body-grid stack stack-m">
+      <div class="crop-filters" role="group" aria-label="Filtruj warzywa">
+        <span class="tiny" style="margin-right: 4px;">Pokaż:</span>
+        <button class="chip" data-filter="wszystko" aria-pressed="true">wszystko</button>
+        <button class="chip" data-filter="lisc" aria-pressed="false">liściaste</button>
+        <button class="chip" data-filter="korzen" aria-pressed="false">korzeniowe</button>
+        <button class="chip" data-filter="owoc" aria-pressed="false">owocowe</button>
+        <button class="chip" data-filter="ziolo" aria-pressed="false">zioła</button>
+        <button class="chip" data-filter="polcien" aria-pressed="false">zniesie półcień</button>
+      </div>
+
+      <div class="crops" id="crops">
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="korzen polcien">
+          <div class="crop-top"><h4>Rzodkiewka</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Pierwsze warzywo, jakie zbierzesz &mdash; cztery, pięć tygodni od wysiewu. Jeśli ktoś się zniechęca do ogrodnictwa, to zwykle dlatego, że zaczął od czegoś, co rośnie pół roku.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>1–2 cm</dd>
+            <dt>Rozstawa</dt><dd>rzędy co 10 cm, przerywać co 2–3 cm</dd>
+            <dt>Siew</dt><dd>kwiecień – wrzesień, co 2–3 tygodnie</dd>
+            <dt>Zbiór</dt><dd>4–5 tygodni po siewie</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="lisc polcien">
+          <div class="crop-top"><h4>Sałata (na liście)</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Nie na główki &mdash; siej gęsto i zbieraj po dwa, trzy zewnętrzne listki z każdej rośliny. Środek odrasta i masz z jednego wysiewu kilka tygodni zbiorów.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>1 cm</dd>
+            <dt>Rozstawa</dt><dd>rzędy co 15 cm, bez przerywania</dd>
+            <dt>Siew</dt><dd>marzec – wrzesień, nowy rządek co 3 tygodnie</dd>
+            <dt>Zbiór</dt><dd>6–8 tygodni, potem wielokrotnie</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="lisc polcien">
+          <div class="crop-top"><h4>Rukola</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Rośnie szybciej niż sałata i ma charakter. Najlepiej wychodzi z siewu późnoletniego &mdash; w chłodzie nie robi się gorzka i nie strzela w kwiat.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>1–2 cm</dd>
+            <dt>Rozstawa</dt><dd>rzędy co 15–20 cm</dd>
+            <dt>Siew</dt><dd>kwiecień – wrzesień</dd>
+            <dt>Zbiór</dt><dd>od 4 tygodni, wielokrotnie</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="lisc polcien">
+          <div class="crop-top"><h4>Szpinak</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Mrozoodporny, znosi półcień, a późnoletni siew zbierasz jeszcze w listopadzie. Latem w pełnym słońcu strzela w kwiat &mdash; wtedy przenieś go w cień.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>2 cm</dd>
+            <dt>Rozstawa</dt><dd>baby leaf: 1 nasiono co 1 cm, rzędy co 15 cm</dd>
+            <dt>Siew</dt><dd>kwiecień – maj i sierpień – wrzesień</dd>
+            <dt>Zbiór</dt><dd>od 6 tygodni, wielokrotnie</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="lisc polcien">
+          <div class="crop-top"><h4>Boćwina</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Najbardziej wyrozumiałe warzywo na tej liście. Kolorowe łodygi, zbiór od czerwca do pierwszych mrozów, znosi susze i cień. Jeśli masz posadzić jedną rzecz &mdash; to tę.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>2–3 cm</dd>
+            <dt>Rozstawa</dt><dd>na liście: rzędy co 20–25 cm; na łodygi: co 20 cm</dd>
+            <dt>Siew</dt><dd>kwiecień – lipiec</dd>
+            <dt>Zbiór</dt><dd>od 8 tygodni do przymrozków</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="dzialka" data-cat="lisc polcien">
+          <div class="crop-top"><h4>Jarmuż</h4><span class="lvl">średnie</span></div>
+          <p class="why">Zbiera się go przez całą zimę, a wiosną jeszcze zjadasz pędy kwiatowe. Zajmuje sporo miejsca i przyciąga bielinki, więc raczej na grządkę niż na balkon.</p>
+          <dl class="spec">
+            <dt>Siew</dt><dd>maj, gęsto w rozsadniku lub w multiplatach</dd>
+            <dt>Przesadzanie</dt><dd>przy 4–5 liściach właściwych, lipiec</dd>
+            <dt>Rozstawa</dt><dd>40–45 cm</dd>
+            <dt>Zbiór</dt><dd>listopad – marzec</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="korzen">
+          <div class="crop-top"><h4>Burak</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Jedno &bdquo;nasiono&rdquo; to w rzeczywistości kilka nasion, więc rośnie kępkami &mdash; i to jest zaleta. Siej w multiplatach po 4&ndash;5 nasion i sadź całą kępkę. Młode liście też są jadalne.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>2 cm</dd>
+            <dt>Rozstawa</dt><dd>rzędy co 20–25 cm, przerywać co 5–7 cm</dd>
+            <dt>Siew</dt><dd>maj – lipiec, partiami co miesiąc</dd>
+            <dt>Zbiór</dt><dd>lipiec – listopad, największe najpierw</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="dzialka" data-cat="korzen">
+          <div class="crop-top"><h4>Marchew</h4><span class="lvl">średnie</span></div>
+          <p class="why">Jedyna na tej liście, której <em>nie wolno</em> przesadzać &mdash; korzeń palowy jest zbyt delikatny. Zawsze siew wprost do ziemi i zawsze siatka przeciw połyśnicy marchwiance.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>1–2 cm</dd>
+            <dt>Rozstawa</dt><dd>rzędy co 15–20 cm, przerywać co 4–7 cm</dd>
+            <dt>Siew</dt><dd>kwiecień – czerwiec, wprost do gruntu</dd>
+            <dt>Zbiór</dt><dd>od lipca; późne odmiany zimują w ziemi</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="korzen">
+          <div class="crop-top"><h4>Ziemniaki w pojemniku</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Najbardziej efektowny zbiór, jaki możesz mieć na balkonie: wywracasz worek i wysypuje się z niego obiad. W gruncie zajmują pół grządki, w donicy &mdash; jeden metr kwadratowy podłogi.</p>
+          <dl class="spec">
+            <dt>Pojemnik</dt><dd>30 l na 3 sadzeniaki (min. 25 l)</dd>
+            <dt>Sadzenie</dt><dd>do połowy pojemnika, przykryć 10 cm ziemi</dd>
+            <dt>Termin</dt><dd>kwiecień, po wcześniejszym podkiełkowaniu</dd>
+            <dt>Zbiór</dt><dd>wczesne 10 tyg., średnie 13 tyg., późne 16 tyg.</dd>
+            <dt>Woda</dt><dd>10 l co 3 dni w upały</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="owoc">
+          <div class="crop-top"><h4>Pomidory koktajlowe</h4><span class="lvl">średnie</span></div>
+          <p class="why">Odmiany karłowe (krzaczaste) nie wymagają palikowania ani pasynkowania &mdash; to dla nich zacznij. Małe owoce dojrzewają najszybciej, co ma znaczenie przy naszym krótkim lecie.</p>
+          <dl class="spec">
+            <dt>Siew</dt><dd>marzec, ciepły parapet, 12 tyg. przed wysadzeniem</dd>
+            <dt>Wysadzenie</dt><dd>po 15 maja, po hartowaniu</dd>
+            <dt>Pojemnik</dt><dd>20–25 l, stanowisko południowe przy ścianie</dd>
+            <dt>Zbiór</dt><dd>ok. 11 tyg. po wysadzeniu, lipiec – październik</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="dzialka" data-cat="owoc">
+          <div class="crop-top"><h4>Cukinia</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Rośnie szybko, więc możesz ją siać później niż resztę. Uwaga na skalę: dwie rośliny wyżywią rodzinę, trzy zrobią z ciebie osobę, która rozdaje cukinie sąsiadom.</p>
+          <dl class="spec">
+            <dt>Siew</dt><dd>koniec kwietnia, w domu</dd>
+            <dt>Wysadzenie</dt><dd>po 15 maja, przy 3–4 liściach właściwych</dd>
+            <dt>Rozstawa</dt><dd>1 m (krzaczaste), 2–3 m (płożące)</dd>
+            <dt>Zbiór</dt><dd>lipiec – wrzesień, zawsze największe najpierw</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="owoc">
+          <div class="crop-top"><h4>Fasolka szparagowa karłowa</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Niedoceniany bohater małych przestrzeni. Zwarta, nie potrzebuje podpór, świetnie zapycha dziury po zebranych roślinach. Wysiewaj nową partię co dwa tygodnie.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>5 cm, po 1 nasieniu do doniczki 7 cm</dd>
+            <dt>Rozstawa</dt><dd>15–20 cm, rzędy przesunięte</dd>
+            <dt>Siew</dt><dd>maj – czerwiec, partiami co 2 tygodnie</dd>
+            <dt>Zbiór</dt><dd>lipiec – wrzesień, zrywać często</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="dzialka" data-cat="owoc">
+          <div class="crop-top"><h4>Fasola tyczna</h4><span class="lvl">średnie</span></div>
+          <p class="why">Rośnie w górę, więc daje najwięcej jedzenia z metra kwadratowego. Huw odkrył, że przy jasnej ścianie albo zbiorniku na wodę plonuje dwa tygodnie wcześniej &mdash; odbite światło plus ciepło.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>5 cm</dd>
+            <dt>Podpora</dt><dd>min. 1,8 m, tyczki co 25–30 cm</dd>
+            <dt>Siew</dt><dd>maj w domu, wysadzenie po 15 maja</dd>
+            <dt>Zbiór</dt><dd>lipiec – wrzesień</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="dzialka" data-cat="owoc polcien">
+          <div class="crop-top"><h4>Bób</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Najbardziej mrozoodporna roślina strączkowa &mdash; można ją siać bardzo wcześnie. Młode wierzchołki pędów są jadalne, a uszczykiwanie ich w trakcie kwitnienia zapobiega mszycom.</p>
+          <dl class="spec">
+            <dt>Głębokość</dt><dd>5 cm</dd>
+            <dt>Rozstawa</dt><dd>25–30 cm</dd>
+            <dt>Siew</dt><dd>marzec – kwiecień, wprost do gruntu</dd>
+            <dt>Zbiór</dt><dd>czerwiec – lipiec</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="lisc polcien">
+          <div class="crop-top"><h4>Pędy grochu</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Najszybsze świeże zielone w środku zimy. Wysyp gęsto suchy groch na 5 cm ziemi w tacce, przykryj 2&ndash;3 cm, trzymaj wilgotno. Ścinasz przy 10 cm. Działa cały rok na parapecie.</p>
+          <dl class="spec">
+            <dt>Podłoże</dt><dd>tacka, 5 cm ziemi, przykrycie 2–3 cm</dd>
+            <dt>Nasiona</dt><dd>zwykły suchy groch ze sklepu</dd>
+            <dt>Siew</dt><dd>cały rok, na parapecie</dd>
+            <dt>Zbiór</dt><dd>gdy pędy mają ok. 10 cm</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="ziolo">
+          <div class="crop-top"><h4>Bazylia</h4><span class="lvl">średnie</span></div>
+          <p class="why">Roślina wyłącznie ciepła &mdash; w Polsce realnie tylko na parapecie albo pod osłoną. Wysyp osiem nasion do jednej doniczki, nie jedno; rośnie kępą i tak jest zdrowsza.</p>
+          <dl class="spec">
+            <dt>Doniczka</dt><dd>10 cm, ziemia z domieszką żwiru</dd>
+            <dt>Siew</dt><dd>8 nasion na doniczkę, wiosna</dd>
+            <dt>Stanowisko</dt><dd>ciepły, słoneczny parapet</dd>
+            <dt>Zbiór</dt><dd>uszczykuj wierzchołki przy 10 cm wysokości</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="ziolo polcien">
+          <div class="crop-top"><h4>Natka pietruszki</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Kiełkuje wolno i to zniechęca &mdash; ale potem jest wytrzymała i zbierasz ją nawet zimą. Jeśli nie chcesz czekać trzech tygodni na kiełki, kup wiosną sadzonkę.</p>
+          <dl class="spec">
+            <dt>Doniczka</dt><dd>20 cm, ziemia uniwersalna</dd>
+            <dt>Podlewanie</dt><dd>gdy górny 1 cm jest suchy</dd>
+            <dt>Siew</dt><dd>kwiecień; kiełkuje 2–3 tygodnie</dd>
+            <dt>Zbiór</dt><dd>zewnętrzne liście, środek zostawiaj</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="ziolo polcien">
+          <div class="crop-top"><h4>Mięta</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Zawsze w osobnej doniczce &mdash; w gruncie rozkłonicza się i wypiera sąsiadów. Zimą zamiera, wiosną wraca sama. Praktycznie nie da się jej zabić.</p>
+          <dl class="spec">
+            <dt>Doniczka</dt><dd>25 cm, osobno od innych ziół</dd>
+            <dt>Podlewanie</dt><dd>często, lubi wilgoć</dd>
+            <dt>Stanowisko</dt><dd>pełne słońce lub półcień</dd>
+            <dt>Zbiór</dt><dd>ścinaj wierzchołki tuż nad parą liści</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="ziolo">
+          <div class="crop-top"><h4>Tymianek</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Bylina, więc kupujesz raz i masz na lata. Zimuje na zewnątrz. Ginie wyłącznie od nadmiaru wody &mdash; latem podlewaj raz w tygodniu, poza latem rzadziej.</p>
+          <dl class="spec">
+            <dt>Doniczka</dt><dd>20 cm, ziemia z gruzem/żwirem</dd>
+            <dt>Podlewanie</dt><dd>raz w tygodniu latem, rzadziej poza nim</dd>
+            <dt>Zimowanie</dt><dd>zostaje na zewnątrz</dd>
+            <dt>Zbiór</dt><dd>ścinaj wierzchołki, krzewi się gęściej</dd>
+          </dl>
+        </article>
+
+        <article class="crop" data-paths="balkon dzialka" data-cat="lisc">
+          <div class="crop-top"><h4>Nasturcja</h4><span class="lvl" data-lvl="łatwe">łatwe</span></div>
+          <p class="why">Sadzona w rogu pojemnika albo grządki, gdzie i tak nic by nie rosło. Liście i kwiaty są jadalne i pieprzne, a mszyce wolą ją od twoich warzyw &mdash; działa jak roślina-pułapka.</p>
+          <dl class="spec">
+            <dt>Miejsce</dt><dd>rogi pojemników i grządek</dd>
+            <dt>Siew</dt><dd>maj, wprost na miejsce</dd>
+            <dt>Jadalne</dt><dd>liście, kwiaty, zielone nasiona</dd>
+            <dt>Bonus</dt><dd>ściąga mszyce z warzyw</dd>
+          </dl>
+        </article>
+
+      </div>
+
+      <p class="tiny" id="cropCount" style="margin-top: 6px;"></p>
+
+      <div class="note" style="margin-top: 10px;">
+        <strong>Zasada &bdquo;siej partiami&rdquo; jest ważniejsza niż wybór odmiany.</strong> Jeden duży wysiew sałaty daje dwa tygodnie sałaty i miesiąc pustej ziemi. Ten sam pakiecik wysiany po rządku co trzy tygodnie daje sałatę od maja do października. Dotyczy rzodkiewki, sałaty, rukoli, szpinaku, buraka, rzepy, kalarepy i fasolki karłowej.
+      </div>
+
+      <div class="warn">
+        <strong>Nasiona i sadzeniaki masz już w kuchni.</strong> Ziemniaki, które puściły kiełki, są gotowym sadzeniakiem &mdash; wystarczy jedno &bdquo;oczko&rdquo; na kawałek. Ząbek czosnku posadzony jesienią daje całą główkę. Suchy groch i ciecierzyca kiełkują. Nasiona z pomidora koktajlowego trzeba tylko opłukać z miąższu i wysuszyć. Kolendra ze słoika z przyprawami wyrasta w kolendrę. Zanim cokolwiek kupisz &mdash; zajrzyj do szafki.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     05 — KALENDARZ
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">05</div>
+      <h2>Rok, miesiąc po miesiącu</h2>
+      <p class="sub" data-only="balkon">Parapet i balkon pracują na dwie zmiany: w domu startuje rozsada, na zewnątrz dojrzewa to, co już wyszło. Bieżący miesiąc jest podświetlony.</p>
+      <p class="sub" data-only="dzialka">Dwie kolumny w każdym miesiącu: co dzieje się w domu na parapecie i co na grządce. To jest sedno metody &mdash; rozsada czeka gotowa, zanim zwolni się miejsce. Bieżący miesiąc jest podświetlony.</p>
+    </div>
+
+    <div class="body-grid stack stack-m">
+      <div class="note">
+        <strong>Kalendarz przeliczony na Polskę.</strong> Źródłowe książki opisują ogród w Walii (strefa 8), gdzie ostatnie przymrozki kończą się w połowie maja, ale wiosna zaczyna się wcześniej i jest łagodniejsza. Większość Polski to strefa 6&ndash;7: <strong>ostatnie przymrozki około 15 maja</strong> (&bdquo;zimni ogrodnicy&rdquo;), <strong>pierwsze jesienne w drugiej połowie października</strong>. Terminy poniżej są już przesunięte. Sprawdź jednak własną okolicę &mdash; w górach i na Suwalszczyźnie przymrozki trwają dłużej, nad morzem i na zachodzie krócej.
+      </div>
+
+      <div class="months" id="months"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     06 — PODLEWANIE
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">06</div>
+      <h2>Podlewanie, czyli czynność, którą robisz najczęściej</h2>
+      <p class="sub">Nie ma tu harmonogramu. Jest jedna zasada: wsadź palec w ziemię i sprawdź. Poniżej progi, przy których faktycznie trzeba lać.</p>
+    </div>
+
+    <div class="body-grid stack stack-m">
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Uprawa</th><th>Podlewaj, gdy</th><th>Ile</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Sałaty w skrzynce</td><td>górne 1 cm ziemi suche (młode siewki) lub 3 cm (rośliny wyrośnięte)</td><td>do przemoczenia, wąskim strumieniem z sitkiem</td></tr>
+            <tr><td>Ziemniaki w donicy</td><td>górne 5 cm suche</td><td>10 l co 3 dni w ciepłą pogodę</td></tr>
+            <tr><td>Pomidory</td><td>górne 5 cm suche &mdash; ale regularnie, nie skokowo</td><td>powoli, aż woda pokaże się w spodku</td></tr>
+            <tr><td>Zioła śródziemnomorskie</td><td>górne 5 cm suche (rozmaryn), raz w tygodniu (tymianek)</td><td>oszczędnie &mdash; giną od przelania, nie od suszy</td></tr>
+            <tr><td>Rozsada w multiplatach</td><td>ziemia matowieje na powierzchni</td><td>zanurz tacę w 2,5 cm wody na 15–20 minut</td></tr>
+            <tr><td>Grządka podwyższona</td><td>rzadziej niż pojemniki &mdash; ale głębiej</td><td>obficie raz na kilka dni zamiast codziennie po trochu</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul class="ticks">
+        <li><strong>Deszcz nie liczy się tak, jak myślisz.</strong> Wyrośnięta roślina w donicy tworzy parasol z liści &mdash; woda spływa obok pojemnika. Sprawdzaj ziemię palcem także po deszczu.</li>
+        <li><strong>Podlewanie z beczki jest wydajniejsze niż z kranu.</strong> Zanurzasz konewkę zamiast czekać, aż się napełni. Poza tym deszczówka jest miękka i cieplejsza.</li>
+        <li><strong>Umyte butelki 2 l jako zapas wody.</strong> Napełnione deszczówką, ustawione w cieniu, między doniczkami, tam gdzie się zmieszczą &mdash; rozwiązanie dla miejsc, w których nie mieści się beczka.</li>
+        <li><strong>Mniej wody = intensywniejszy smak pomidorów.</strong> Trzy tygodnie po pierwszych zbiorach ogranicz podlewanie kilku roślin. Zbierzesz mniej owoców, ale różnicę w smaku poczujesz od razu.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     07 — PROBLEMY
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">07</div>
+      <h2>Co pójdzie nie tak</h2>
+      <p class="sub">Wszystkie te rzeczy przydarzają się w pierwszym sezonie każdemu. Żadna nie jest końcem ogrodu.</p>
+    </div>
+
+    <div class="body-grid stack stack-m">
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Objaw</th><th>Przyczyna</th><th>Co zrobić</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Siewki długie i wiotkie</td>
+              <td>za mało światła &mdash; roślina szuka go w górę</td>
+              <td>Najjaśniejszy parapet, obracaj doniczkę o 180° codziennie. Jeśli to nie wystarcza &mdash; lampa LED włączona 8 godzin dziennie. Przy przesadzaniu pomidorów zakop łodygę aż do pierwszej pary liści.</td>
+            </tr>
+            <tr data-only="dzialka">
+              <td>Sadzonki znikają w nocy</td>
+              <td>ślimaki</td>
+              <td>Zabierz im kryjówki: skoś trawę przy grządkach, usuń deski i kamienie, oczyść ścieżki. Wysiewaj w domu i wysadzaj większe, odporniejsze rośliny.</td>
+            </tr>
+            <tr data-only="balkon">
+              <td>Sadzonki znikają w nocy</td>
+              <td>ślimak przywieziony z kupioną sadzonką</td>
+              <td>Na balkonie to rzadkość. Sprawdź spody doniczek i podstawki &mdash; zwykle siedzi tam jeden osobnik i wystarczy go wynieść.</td>
+            </tr>
+            <tr>
+              <td>Sałata strzela w kwiat</td>
+              <td>upał i susza</td>
+              <td>Przenieś pojemnik w półcień na lipiec i sierpień, podlewaj regularniej. Najstarsze rośliny do kompostu, w ich miejsce nowy wysiew.</td>
+            </tr>
+            <tr>
+              <td>Marchew podziurawiona od środka</td>
+              <td>połyśnica marchwianka</td>
+              <td>Zaraz po wschodach przykryj uprawę bardzo drobną siatką i nie zdejmuj jej. Zapobieganie działa, leczenie nie.</td>
+            </tr>
+            <tr>
+              <td>Czarne mszyce na bobie</td>
+              <td>rośliny wypuszczają miękkie wierzchołki</td>
+              <td>Gdy bób zacznie porządnie kwitnąć, uszczyknij górny pęd. Jest jadalny, a mszyce tracą to, po co przyszły.</td>
+            </tr>
+            <tr>
+              <td>Rośliny w doniczkach więdną mimo podlewania</td>
+              <td>ziemia zbiła się i woda spływa bokiem</td>
+              <td>Podlewaj powoli i wielokrotnie, aż woda pokaże się na dole. Warstwa ściółki (skoszona trawa, zrębki) na wierzchu ogranicza wysychanie.</td>
+            </tr>
+            <tr>
+              <td>Nadmiar jednego warzywa naraz</td>
+              <td>wszystko posiane w jednym terminie</td>
+              <td>To nie jest awaria, tylko lekcja planu na przyszły rok: siej partiami i sadź mniej cukinii. W tym roku zamrażaj, kiś albo rozdawaj.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <strong>Hartowanie &mdash; krok, który wszyscy pomijają.</strong> Roślina wychowana na parapecie nie zna wiatru ani nocnego chłodu. Przez pierwsze dni wystawiaj ją rano w osłonięte, jasne miejsce i wnoś na noc. Po pięciu&ndash;siedmiu dniach zostaw ją na noc pod agrowłókniną. Po dziesięciu jest gotowa do wysadzenia. Nawet częściowe hartowanie jest lepsze niż żadne.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     08 — KUCHNIA
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">08</div>
+      <h2>Zbiór i kuchnia</h2>
+      <p class="sub">Sens tego wszystkiego jest taki, że zrywasz na piętnaście minut przed obiadem. Świeżo zerwany groszek smakuje inaczej niż ten sam groszek godzinę później &mdash; to nie sentyment, to cukry, które zaczynają zamieniać się w skrobię.</p>
+    </div>
+
+    <div class="body-grid stack stack-m">
+      <div class="cards">
+        <div class="card">
+          <span class="tag">Codziennie</span>
+          <h4>Zrywaj mało a często</h4>
+          <p>Po dwa, trzy zewnętrzne liście z każdej rośliny zamiast całej główki. Sałata, rukola, boćwina, szpinak i jarmuż odrastają i dają plon przez tygodnie zamiast przez jeden obiad.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Nadmiar</span>
+          <h4>Mrożenie porcjami</h4>
+          <p>Zielone części pora i cebuli pokrojone i rozłożone na tacce, zamrożone przez godzinę, a potem przesypane do woreczka &mdash; nie zbiją się w bryłę. Do zup przez całą zimę.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Nadmiar</span>
+          <h4>Pesto z tego, co jest</h4>
+          <p>Pesto nie potrzebuje bazylii ani orzeszków. Natka, szczypior, zielone części cebuli, młody jarmuż plus prażone orzechy laskowe &mdash; do słoika na tydzień, do zamrażarki na pół roku.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Nadmiar</span>
+          <h4>Szybkie kiszonki</h4>
+          <p>Cienko pokrojona rzodkiewka albo ogórek zalane zalewą octową w szczelnym pojemniku: godzina do trzech w lodówce i gotowe. Najszybszy sposób na warzywa, których jest za dużo.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Zima</span>
+          <h4>Suszenie ziół i kwiatów</h4>
+          <p>Małe pęczki zawieszone do góry nogami, z dala od słońca. Po wysuszeniu do szczelnego słoika, w chłodne i ciemne miejsce. Herbata z własnego balkonu przez cały rok.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Zasada</span>
+          <h4>Jedz sezonowo, nie przetwarzaj wszystkiego</h4>
+          <p>Próba zawekowania całego lata w środku lata to prosta droga do wypalenia. Wybierz jedną uprawę do przetworzenia &mdash; zwykle pomidory &mdash; a resztę po prostu jedz świeżą.</p>
+        </div>
+      </div>
+
+      <div class="warn">
+        <strong>Przednówek &mdash; luka, o której nikt nie uprzedza.</strong> Od marca do maja zimowe zapasy się kończą, a nowe warzywa jeszcze nie dojrzały. Wypełniają ją: jarmuż i jego wiosenne pędy kwiatowe, por, boćwina spod agrowłókniny, sałaty zimowe wysiane w lipcu oraz pędy grochu z parapetu. Warto o tym pomyśleć w środku lata, kiedy wszystkiego jest w nadmiarze.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     LISTA STARTOWA
+     ========================================================== -->
+<section class="step">
+  <div class="shell">
+    <div class="step-head">
+      <div class="step-num">→</div>
+      <h2>Lista na pierwszy tydzień</h2>
+      <p class="sub">Nic tu nie kosztuje więcej niż kilkadziesiąt złotych. Zaznaczenia zapisują się w przeglądarce.</p>
+    </div>
+
+    <div class="body-grid">
+      <div class="check" id="checklist">
+        <label data-only="balkon"><input type="checkbox" data-k="b1"><span>Zrób zdjęcia balkonu co godzinę w słoneczny dzień i policz godziny bezpośredniego słońca</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b2"><span>Sprawdź kompasem, w którą stronę świata wychodzi okno i balkon</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b3"><span>Zbierz pierwszą partię pojemników: rolki po papierze, wytłaczanka na jajka, cztery kubki po jogurcie</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b4"><span>Przebij dziurki drenażowe we wszystkim, co ich nie ma</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b5"><span>Kup worek ziemi uniwersalnej bez torfu i konewkę z sitkiem</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b6"><span>Kup nasiona: rzodkiewka, sałata na liście, rukola, boćwina &mdash; to komplet na start</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b7"><span>Przejrzyj kuchenne szafki: kiełkujące ziemniaki, czosnek, suchy groch, kolendra w przyprawach</span></label>
+        <label data-only="balkon"><input type="checkbox" data-k="b8"><span>Wysyp pierwszą tackę pędów grochu &mdash; zbiór za dwa tygodnie, niezależnie od pory roku</span></label>
+
+        <label data-only="dzialka"><input type="checkbox" data-k="d1"><span>Przejdź działkę z listą SWAGA i zapisz odpowiedzi &mdash; rozmiar, woda, strona świata, podłoże, dojazd</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d2"><span>Wybierz miejsce na grządkę 3 × 1,2 m i wyznacz je sznurkiem</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d3"><span>Wybierz zacieniony róg na kompostownik i beczkę na deszczówkę</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d4"><span>Zamów metr sześcienny ziemi urodzajnej &mdash; sprawdź wcześniej, czy auto dojedzie</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d5"><span>Skompletuj minimum narzędzi: szpadel, grabie, motyczka ręczna, nóż, sznurek, konewka</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d6"><span>Zbuduj kompostownik minimum 1 × 1 m &mdash; palety wystarczą</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d7"><span>Zaplanuj cztery bloki upraw na dziesięciu sekcjach grządki (patrz rysunek w kroku 02)</span></label>
+        <label data-only="dzialka"><input type="checkbox" data-k="d8"><span>Ustaw jeden parapet na rozsadę &mdash; bez niego cały plan sukcesji nie zadziała</span></label>
+
+        <label><input type="checkbox" data-k="c1"><span>Zamów nasiona z podziałem na partie, nie wszystko na jeden wysiew</span></label>
+        <label><input type="checkbox" data-k="c2"><span>Postaw w kuchni wiadro z pokrywką na resztki organiczne</span></label>
+        <label><input type="checkbox" data-k="c3"><span>Załóż notatnik: co, kiedy i gdzie posiane. Za rok będzie wart więcej niż każda książka</span></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="colophon">
+  <div class="shell">
+    <div class="eyebrow">Źródła</div>
+    <h2 style="font-size: 26px; margin-top: 10px;">Skąd pochodzą te liczby</h2>
+    <p class="small" style="margin-top: 12px; max-width: 62ch;">Wszystkie rozstawy, głębokości siewu, pojemności doniczek i okresy do zbioru pochodzą z poniższych książek. Terminy kalendarzowe zostały przesunięte z klimatu walijskiego na polski. Treść jest własnym opracowaniem, nie tłumaczeniem.</p>
+
+    <div class="sources">
+      <div class="source">
+        <span class="t">Veg in One Bed</span>
+        <span class="a">Huw Richards, DK</span>
+        <span>Grządka 3 × 1,2 m podzielona na dziesięć sekcji, plan roczny, rozdział o parapecie i uprawach w pojemnikach.</span>
+      </div>
+      <div class="source">
+        <span class="t">Grow Food for Free</span>
+        <span class="a">Huw Richards, DK</span>
+        <span>Metoda SWAGA, pojemniki z odzysku, uprawa na balkonie i tarasie, sadzenie z kuchennej szafki.</span>
+      </div>
+      <div class="source">
+        <span class="t">The Vegetable Grower&rsquo;s Handbook</span>
+        <span class="a">Huw Richards, DK</span>
+        <span>Tabele upraw z głębokościami i rozstawami, no-dig, siew partiami, praca z cieniem, myślenie o małej przestrzeni.</span>
+      </div>
+      <div class="source">
+        <span class="t">The Self-Sufficiency Garden</span>
+        <span class="a">Huw Richards, Sam Cooper, DK</span>
+        <span>Ziemniaki w donicach, magazynowanie wody, przednówek, przetwarzanie i przechowywanie plonów.</span>
+      </div>
+      <div class="source">
+        <span class="t">Cook Express</span>
+        <span class="a">Heather Whinney, DK</span>
+        <span>Podejście do gotowania z tego, co akurat jest &mdash; punkt odniesienia dla rozdziału o kuchni.</span>
+      </div>
+      <div class="source">
+        <span class="t">Plants and Flowers</span>
+        <span class="a">Alan E. Bessette, William K. Chapman, Dover</span>
+        <span>Zbiór rycin botanicznych &mdash; inspiracja dla wizualnego języka tej strony.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var body = document.body;
+
+  /* ---------- kalendarz ---------- */
+  var MIESIACE = [
+    { n: "Styczeń", dom: ["Pędy grochu i mikrolistki na parapecie", "Przeglądanie nasion, zamówienia"], out: ["Jarmuż i por spod śniegu", "Grządka pod ściółką — nic nie robisz"] },
+    { n: "Luty", dom: ["Papryka i chili — najwcześniejszy możliwy siew", "Podkiełkowanie ziemniaków w jasnym, chłodnym miejscu"], out: ["Zbiór zimujących liściastych", "Naprawy skrzyń i narzędzi"] },
+    { n: "Marzec", dom: ["Pomidory na ciepłym parapecie", "Sałata, boćwina, kapustne w multiplatach"], out: ["Bób wprost do gruntu", "Pierwsza rzodkiewka pod osłoną"] },
+    { n: "Kwiecień", dom: ["Cukinia i dynia pod koniec miesiąca", "Fasolka w doniczkach 7 cm"], out: ["Ziemniaki do donic i grządki", "Rzodkiewka, sałata, marchew, rukola"] },
+    { n: "Maj", dom: ["Hartowanie wszystkiego, co ma wyjść na zewnątrz", "Ostatnie siewy jarmużu i pora"], out: ["Po 15 maja: pomidory, cukinia, fasola", "Burak, rzepa, boćwina, fasolka karłowa"] },
+    { n: "Czerwiec", dom: ["Sałaty na letnią sukcesję", "Kapusta pekińska na jesień"], out: ["Obsypywanie ziemniaków", "Pierwsze sałaty, rzodkiewki i bób"] },
+    { n: "Lipiec", dom: ["Sałaty zimowe — teraz albo wcale", "Kolejna partia fasolki"], out: ["Zbiór ziemniaków i bobu", "Przesadzanie pora i jarmużu na zwolnione miejsce"] },
+    { n: "Sierpień", dom: ["Szpinak i rukola na jesienny zbiór", "Roszponka i sałaty zimowe"], out: ["Pomidory, cukinia, fasolka — szczyt sezonu", "Wolne miejsca obsiewać od razu"] },
+    { n: "Wrzesień", dom: ["Ostatnie siewy liściastych", "Suszenie ziół i zbiór nasion"], out: ["Zbiór buraków i marchwi", "Agrowłóknina w pogotowiu"] },
+    { n: "Październik", dom: ["Pędy grochu wracają na parapet", "Porządkowanie i etykietowanie nasion"], out: ["Czosnek do ziemi", "Jesienne liście na kompost i ściółkę"] },
+    { n: "Listopad", dom: ["Mikrolistki", "Planowanie przyszłego sezonu na papierze"], out: ["Zbiór pora i jarmużu", "Warstwa 2–3 cm kompostu na całą grządkę"] },
+    { n: "Grudzień", dom: ["Pędy grochu i mikrolistki", "Zamówienie nasion — najlepszy wybór odmian"], out: ["Jarmuż smakuje najlepiej po przymrozku", "Grządka przykryta, odpoczywa"] }
+  ];
+
+  var teraz = new Date().getMonth();
+  var box = document.getElementById("months");
+  MIESIACE.forEach(function (m, i) {
+    var el = document.createElement("div");
+    el.className = "month" + (i === teraz ? " is-now" : "");
+    var items = m.dom.concat(m.out).map(function (t) { return "<li>" + t + "</li>"; }).join("");
+    el.innerHTML =
+      '<div class="month-name"><span>' + m.n + "</span>" +
+      (i === teraz ? '<span class="here">Jesteś tu</span>' : "") + "</div>" +
+      '<div class="eyebrow">W domu</div><ul>' + m.dom.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>" +
+      '<div class="eyebrow">Na zewnątrz</div><ul>' + m.out.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>";
+    box.appendChild(el);
+  });
+
+  document.getElementById("statusNow").textContent =
+    "Ścieżka: — · " + MIESIACE[teraz].n;
+
+  /* ---------- wybór ścieżki ---------- */
+  var NAZWY = { balkon: "Parapet i balkon", dzialka: "Działka" };
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".path-card"));
+
+  function ustawSciezke(mode, scroll) {
+    body.dataset.mode = mode;
+    cards.forEach(function (c) {
+      c.setAttribute("aria-pressed", String(c.dataset.set === mode));
+      c.querySelector(".pc-state").textContent =
+        c.dataset.set === mode ? "Wybrana ścieżka" : "Wybierz tę ścieżkę";
+    });
+    document.getElementById("statusNow").textContent =
+      "Ścieżka: " + NAZWY[mode] + " · " + MIESIACE[teraz].n;
+    try { localStorage.setItem("ogrod-mode", mode); } catch (e) {}
+    filtrujWarzywa();
+    if (scroll) {
+      var t = document.querySelector("main .step");
+      if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  cards.forEach(function (c) {
+    c.addEventListener("click", function () { ustawSciezke(c.dataset.set, true); });
+  });
+
+  document.getElementById("swapBtn").addEventListener("click", function () {
+    ustawSciezke(body.dataset.mode === "balkon" ? "dzialka" : "balkon", false);
+    document.querySelector(".chooser").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  /* ---------- filtrowanie warzyw ---------- */
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+  var crops = Array.prototype.slice.call(document.querySelectorAll(".crop"));
+  var aktywnyFiltr = "wszystko";
+
+  function filtrujWarzywa() {
+    var mode = body.dataset.mode;
+    var widoczne = 0;
+    crops.forEach(function (el) {
+      var pasujeSciezka = !mode || el.dataset.paths.indexOf(mode) !== -1;
+      var pasujeKat = aktywnyFiltr === "wszystko" || el.dataset.cat.indexOf(aktywnyFiltr) !== -1;
+      var ok = pasujeSciezka && pasujeKat;
+      el.classList.toggle("hidden", !ok);
+      if (ok) widoczne++;
+    });
+    var licznik = document.getElementById("cropCount");
+    var txt = "Widocznych upraw: " + widoczne + " z " + crops.length + ".";
+    if (mode === "balkon" && aktywnyFiltr === "wszystko") {
+      txt += " Pominięte — jarmuż, marchew, cukinia, fasola tyczna i bób — potrzebują gruntu albo zbyt dużo miejsca.";
+    }
+    licznik.textContent = txt;
+  }
+
+  chips.forEach(function (ch) {
+    ch.addEventListener("click", function () {
+      aktywnyFiltr = ch.dataset.filter;
+      chips.forEach(function (c) { c.setAttribute("aria-pressed", String(c === ch)); });
+      filtrujWarzywa();
+    });
+  });
+
+  /* ---------- lista kontrolna ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#checklist input"));
+  boxes.forEach(function (b) {
+    var k = "ogrod-check-" + b.dataset.k;
+    try { if (localStorage.getItem(k) === "1") b.checked = true; } catch (e) {}
+    b.addEventListener("change", function () {
+      try { localStorage.setItem(k, b.checked ? "1" : "0"); } catch (e) {}
+    });
+  });
+
+  /* ---------- start ---------- */
+  var zapisane = null;
+  try { zapisane = localStorage.getItem("ogrod-mode"); } catch (e) {}
+  if (zapisane === "balkon" || zapisane === "dzialka") {
+    ustawSciezke(zapisane, false);
+  } else {
+    filtrujWarzywa();
+  }
+})();
+</script>
