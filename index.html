@@ -253,8 +253,8 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
   text-transform: uppercase;
   color: var(--accent);
 }
-.statusbar .swap,
-.statusbar .do-kalendarza {
+.statusbar .swap {
+  margin-left: auto;
   font: inherit;
   font-size: 13.5px;
   background: none;
@@ -263,13 +263,74 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
   padding: 5px 14px;
   color: var(--ink-2);
   cursor: pointer;
-  text-decoration: none;
   white-space: nowrap;
 }
-.statusbar .swap { margin-left: auto; }
-.statusbar .swap:hover,
-.statusbar .do-kalendarza:hover { border-color: var(--accent); color: var(--accent); }
-.statusbar .do-kalendarza { border-color: var(--accent); color: var(--accent); }
+.statusbar .swap:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- pływający przycisk do kalendarza ---------- */
+.fab {
+  position: fixed;
+  right: max(22px, env(safe-area-inset-right));
+  bottom: max(22px, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 20px;
+  border-radius: 100px;
+  text-decoration: none;
+  font-size: 15px;
+  color: var(--ink);
+  /* szkło: półprzezroczyste tło + rozmycie tego, co pod spodem */
+  background: color-mix(in srgb, var(--paper-2) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.7);
+  backdrop-filter: blur(16px) saturate(1.7);
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  box-shadow:
+    0 8px 26px -10px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.fab:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow:
+    0 14px 32px -12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 color-mix(in srgb, #fff 52%, transparent);
+}
+.fab:active { transform: translateY(0); }
+.fab .fab-txt { font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; }
+.fab .fab-ikona {
+  flex: none;
+  color: var(--accent);
+  transition: transform .2s ease;
+}
+.fab:hover .fab-ikona { transform: translateX(3px); }
+
+/* w ciemnym motywie wewnętrzny highlight musi być subtelniejszy */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .fab {
+    background: color-mix(in srgb, var(--paper-2) 70%, transparent);
+    box-shadow:
+      0 8px 26px -10px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 color-mix(in srgb, #fff 12%, transparent);
+  }
+}
+:root[data-theme="dark"] .fab {
+  background: color-mix(in srgb, var(--paper-2) 70%, transparent);
+  box-shadow:
+    0 8px 26px -10px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 color-mix(in srgb, #fff 12%, transparent);
+}
+
+/* bez obsługi rozmycia tło musi być pełne, inaczej tekst zlewa się z treścią */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .fab { background: var(--paper-2); }
+}
+
+@media (max-width: 520px) {
+  .fab { right: 14px; bottom: 14px; padding: 11px 16px; font-size: 14px; }
+}
 
 /* ============================================================
    SEKCJE — numerowany ciąg kroków (to naprawdę jest sekwencja)
@@ -643,7 +704,6 @@ body[data-mode] .no-mode-yet { display: none; }
     <div class="shell statusbar-inner">
       <span class="now" id="statusNow">&mdash;</span>
       <button class="swap" id="swapBtn">Zmień ścieżkę</button>
-      <a class="do-kalendarza" href="https://agalapinska.github.io/ogrod-od-zera/kalendarz.html">Kalendarz siewu i zbiorów →</a>
     </div>
   </div>
 </section>
@@ -1475,6 +1535,14 @@ body[data-mode] .no-mode-yet { display: none; }
     </div>
   </div>
 </footer>
+
+<a class="fab" href="https://agalapinska.github.io/ogrod-od-zera/kalendarz.html">
+  <span class="fab-txt">Przejdź do kalendarza</span>
+  <svg class="fab-ikona" width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+    <path d="M2.5 8.5h11M9.5 4.5l4 4-4 4" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
 
 <script>
 (function () {

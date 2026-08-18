@@ -95,12 +95,35 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .top-row { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
 .top h1 { font-size: clamp(30px, 5vw, 46px); letter-spacing: -0.02em; }
 .top .sub { margin-top: 10px; color: var(--ink-2); max-width: 62ch; font-size: 17px; }
-.back {
-  margin-left: auto; font-size: 14px; text-decoration: none;
-  border: 1px solid var(--rule-2); border-radius: 100px; padding: 6px 15px;
-  color: var(--ink-2); white-space: nowrap;
+/* ---------- belka powrotu ---------- */
+:root { --h-belka: 46px; }
+
+.belka {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--h-belka);
+  display: flex; align-items: center;
+  background: color-mix(in srgb, var(--paper) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.7);
+  backdrop-filter: blur(16px) saturate(1.7);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
 }
-.back:hover { border-color: var(--accent); color: var(--accent); }
+.belka .shell { display: flex; align-items: center; gap: 12px; width: 100%; }
+.wroc {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 14.5px; text-decoration: none; color: var(--ink);
+  padding: 5px 4px; border-radius: 4px;
+}
+.wroc .wroc-txt { font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; }
+.wroc .wroc-ikona { flex: none; color: var(--accent); transition: transform .2s ease; }
+.wroc:hover .wroc-ikona { transform: translateX(-3px); }
+.belka .belka-tytul {
+  margin-left: auto; font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .belka { background: var(--paper); }
+}
+@media (max-width: 560px) { .belka .belka-tytul { display: none; } }
 
 /* ---------- panel „co teraz” ---------- */
 .teraz { padding: 30px 0 6px; }
@@ -124,13 +147,19 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
 /* ---------- pasek narzędzi ---------- */
 .narzedzia {
-  position: sticky; top: 0; z-index: 30;
+  position: sticky; top: var(--h-belka); z-index: 30;
   background: color-mix(in srgb, var(--paper) 94%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--rule);
   margin-top: 26px;
 }
 .narzedzia-in { display: flex; gap: 10px 16px; flex-wrap: wrap; align-items: center; padding: 11px 0; }
+
+/* na wąskich ekranach filtry zawijają się do kilku rzędów — przyklejone
+   zjadałyby ćwierć widoku, więc przyklejona zostaje sama belka powrotu */
+@media (max-width: 640px) {
+  .narzedzia { position: static; }
+}
 .grupa { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .grupa > .eyebrow { margin-right: 2px; }
 
@@ -291,6 +320,19 @@ a { color: var(--accent); text-underline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
+<div class="belka">
+  <div class="shell">
+    <a class="wroc" href="https://agalapinska.github.io/ogrod-od-zera/">
+      <svg class="wroc-ikona" width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+        <path d="M14.5 8.5h-11M7.5 4.5l-4 4 4 4" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="wroc-txt">Wróć do przewodnika</span>
+    </a>
+    <span class="belka-tytul">Kalendarz</span>
+  </div>
+</div>
+
 <header class="top">
   <div class="shell top-row">
     <div>
@@ -298,7 +340,6 @@ a { color: var(--accent); text-underline-offset: 3px; }
       <h1 style="margin-top: 10px;">Kalendarz ogrodnika</h1>
       <p class="sub">Trzydzieści siedem upraw w rozdzielczości pół miesiąca: kiedy siać pod osłoną, kiedy wprost do ziemi, kiedy przesadzać i kiedy zbierać. Na to nakłada się Twoja własna warstwa — co faktycznie posiałaś i kiedy tego oczekiwać.</p>
     </div>
-    <a class="back" href="https://agalapinska.github.io/ogrod-od-zera/">← Przewodnik</a>
   </div>
 </header>
 
