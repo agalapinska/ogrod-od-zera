@@ -1,0 +1,30 @@
+{
+  "name": "Ogród od zera — przewodnik i kalendarz",
+  "short_name": "Ogród od zera",
+  "description": "Przewodnik na pierwszy sezon warzywny i interaktywny kalendarz siewu i zbiorów z własnymi wpisami.",
+  "lang": "pl",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "id": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#EDEEE7",
+  "theme_color": "#3D6B31",
+  "categories": ["lifestyle", "education", "productivity"],
+  "icons": [
+    { "src": "ikony/ikona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "ikony/ikona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "ikony/ikona-maskowalna-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kalendarz siewu i zbiorów",
+      "short_name": "Kalendarz",
+      "description": "Co siać i zbierać w tym miesiącu",
+      "url": "./kalendarz.html",
+      "icons": [{ "src": "ikony/ikona-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

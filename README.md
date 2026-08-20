@@ -8,6 +8,26 @@ warzywa, inne rysunki, inny kalendarz — i przenosi się między stronami.
 - **Przewodnik:** https://agalapinska.github.io/ogrod-od-zera/
 - **Kalendarz:** https://agalapinska.github.io/ogrod-od-zera/kalendarz.html
 
+## Aplikacja
+
+Serwis jest aplikacją instalowalną (PWA). Na telefonie przeglądarka
+zaproponuje „Dodaj do ekranu głównego”; na iPhonie robi się to ręcznie
+przez Udostępnij → Do ekranu początkowego. Po instalacji uruchamia się
+bez paska adresu, z własną ikoną, i **działa bez internetu** — co ma
+znaczenie na działce z kiepskim zasięgiem.
+
+Service worker (`sw.js`) trzyma w pamięci obie strony, manifest i ikony.
+Strony pobiera najpierw z sieci, żeby zmiany wchodziły od razu, a z kopii
+dopiero gdy sieci nie ma; pozostałe zasoby serwuje od ręki z cache
+i odświeża w tle. Gdy pojawi się nowa wersja, na dole wyskakuje pasek
+„Odśwież” — strona przeładowuje się tylko po kliknięciu, nigdy sama.
+
+Wersja workera to skrót z treści zbudowanych stron, więc każda realna
+zmiana unieważnia stary cache. Wylicza ją `build.py`.
+
+Wpisy w kalendarzu i tak siedzą w `localStorage`, więc offline działa
+w pełni — łącznie z dodawaniem nowych.
+
 ## Kalendarz
 
 Trzydzieści siedem upraw w rozdzielczości pół miesiąca, w czterech
@@ -62,10 +82,20 @@ października. Ilustracje są oryginalne (SVG), nie pochodzą ze skanów.
 claude.ai, czyli bez `<!doctype>`, `<html>`, `<head>` i `<body>` — te
 znaczniki dokłada hosting artefaktów w momencie publikacji.
 
-| źródło | strona |
+| źródło | wynik |
 |---|---|
 | `src/ogrod.html` | `index.html` |
 | `src/kalendarz.html` | `kalendarz.html` |
+| `src/sw.js` | `sw.js` (z podstawioną wersją) |
+
+Poza tym w repo leżą pliki nieskładane z niczego: `manifest.webmanifest`,
+`ikony/` oraz `.nojekyll` (wyłącza przetwarzanie przez Jekylla).
+
+Budowanie dokłada do obu stron powłokę aplikacji — znaczniki manifestu
+i ikon, kolory paska systemowego, rejestrację workera, pasek instalacji
+i aktualizacji oraz wskaźnik trybu offline. Dlatego tych rzeczy nie ma
+w plikach źródłowych: wersje publikowane jako artefakty claude.ai mają
+zostać zwykłymi stronami.
 
 Pliki w katalogu głównym są **generowane** i to je serwuje GitHub Pages.
 Budowanie dokłada doctype (bez niego przeglądarka wchodzi w tryb zgodności),
