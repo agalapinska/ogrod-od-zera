@@ -241,7 +241,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .bar {
   position: absolute; top: 0; height: 11px; border-radius: 2px;
   display: flex; align-items: center; padding-inline: 5px; overflow: hidden;
-  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.06em;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.04em;
   text-transform: uppercase; white-space: nowrap; color: var(--paper);
 }
 .bar.b-oslona  { background: var(--a-oslona); }
@@ -276,10 +276,18 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .moje-head h2 { font-size: 26px; }
 
 .formularz {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;
+  display: grid;
+  /* min() zamiast gołego 150px — inaczej w wąskim kontenerze ścieżka
+     minimalna jest szersza niż kontener i formularz wypycha stronę */
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  gap: 12px;
   align-items: end; border: 1px solid var(--rule); border-radius: 4px;
   background: var(--paper-2); padding: 18px 20px;
 }
+.pole-szerokie { grid-column: span 2; }
+/* przy jednej kolumnie „span 2” wymuszałby drugą ścieżkę i przepełnienie */
+@media (max-width: 420px) { .pole-szerokie { grid-column: auto; } }
+.pole input, .pole select, .pole textarea { min-width: 0; max-width: 100%; }
 .pole { display: flex; flex-direction: column; gap: 5px; }
 .pole label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); }
 .pole input, .pole select, .pole textarea {
@@ -316,6 +324,62 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .dane .rzad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .komunikat { font-size: 13.5px; color: var(--a-wprost); }
 .komunikat.blad { color: var(--dzis); }
+
+/* ============================================================
+   RESPONSYWNOŚĆ
+   ============================================================ */
+
+/* Cień na krawędzi mówi, że siatka jedzie dalej w bok — bez tego
+   na telefonie wygląda, jakby rok kończył się w marcu. */
+.kal-wrap {
+  background:
+    linear-gradient(to right, var(--paper-2) 30%, transparent) left center / 40px 100% no-repeat local,
+    linear-gradient(to left, var(--paper-2) 30%, transparent) right center / 40px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.17), transparent) left center / 14px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.17), transparent) right center / 14px 100% no-repeat scroll;
+}
+
+@media (pointer: coarse) {
+  .chip {
+    min-height: 44px; padding-inline: 16px;
+    display: inline-flex; align-items: center;
+  }
+  .szukaj, .pole input, .pole select { min-height: 44px; }
+  .przycisk { min-height: 44px; }
+  .wroc { min-height: 44px; padding-inline: 6px; }
+  .nazwa { min-height: 46px; }
+  .wpis .w-usun { padding: 12px 6px; }
+}
+
+@media (max-width: 640px) {
+  /* Kolumna z nazwami zajmowała 64% widocznej szerokości kalendarza,
+     przez co na pasma zostawały dwa i pół miesiąca. */
+  :root { --nazwa-w: 132px; }
+  .nazwa .n-txt { font-size: 13.5px; }
+  .nazwa { padding: 9px 6px 9px 10px; }
+
+  .eyebrow, .kal-head .rog, .pole label { font-size: 11.5px; }
+  .bar { padding-inline: 4px; }
+  .wpis .w-czyn { font-size: 10.5px; }
+
+  .top { padding: 22px 0 20px; }
+  .teraz-box { padding: 18px 16px; }
+  .formularz { padding: 16px; }
+  .moje { padding: 34px 0 56px; }
+}
+
+@media (max-width: 420px) {
+  :root { --nazwa-w: 116px; }
+  /* data schodzi do własnego wiersza — przy 92 px stałej kolumny
+     na treść wpisu zostawało 145 px */
+  .wpis {
+    grid-template-columns: 1fr auto;
+    gap: 4px 12px;
+  }
+  .wpis .w-data { grid-column: 1 / -1; }
+  .top h1 { font-size: 28px; }
+  .top .sub { font-size: 15.5px; }
+}
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -431,7 +495,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
         <label for="fIle">Ile (opcjonalnie)</label>
         <input type="text" id="fIle" placeholder="np. 2 skrzynki, 12 sadzonek">
       </div>
-      <div class="pole" style="grid-column: span 2;">
+      <div class="pole pole-szerokie">
         <label for="fNotatka">Notatka (opcjonalnie)</label>
         <input type="text" id="fNotatka" placeholder="np. odmiana, miejsce, pogoda">
       </div>
