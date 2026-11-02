@@ -19,66 +19,103 @@
 <title>Kalendarz ogrodnika</title>
 <style>
 :root {
-  --paper:    #EDEEE7;
-  --paper-2:  #F7F8F3;
-  --paper-3:  #E3E5DB;
-  --ink:      #191E14;
-  --ink-2:    #454D3E;
-  --muted:    #737B69;
-  --rule:     #D0D4C6;
-  --rule-2:   #BFC4B3;
+  /* Paleta z motywu shadcn/ui (teal, radius 0).
+     Nazwy zostają nasze — zmieniają się wartości, nie architektura. */
+  --paper:    oklch(1 0 0);                   /* background */
+  --paper-2:  oklch(0.97 0 0);                /* muted — tło kart */
+  --paper-3:  oklch(0.941 0 0);
+  --ink:      oklch(0.145 0 0);               /* foreground */
+  --ink-2:    oklch(0.371 0 0);
+  /* wklejkowe 0.556 daje na bieli 4,35:1 — tuż pod progiem AA,
+     a chodzą tym drobne etykiety wersalikowe; stąd 0.53 */
+  --muted:    oklch(0.53 0 0);                /* muted-foreground, przyciemniony */
+  --rule:     oklch(0.922 0 0);               /* border */
+  --rule-2:   oklch(0.861 0 0);
 
-  --leaf:     #3D6B31;
-  --leaf-soft:#E0E8DA;
-  --enamel:   #235B76;
-  --enamel-soft:#DBE6EB;
+  --accent:      oklch(0.511 0.096 186.391);  /* primary */
+  --accent-soft: oklch(0.962 0.016 186.391);
+  --dzis:        oklch(0.577 0.245 27.325);   /* destructive */
 
-  /* kolory czynności — stały zestaw semantyczny, niezależny od akcentu */
-  --a-oslona:  #6F55A0;
-  --a-wprost:  #3D6B31;
-  --a-przesad: #235B76;
-  --a-zbior:   #96671A;
-  --a-oslona-t:  #EAE3F4;
-  --a-wprost-t:  #E0E8DA;
-  --a-przesad-t: #DBE6EB;
-  --a-zbior-t:   #F0E7D4;
+  --radius: 0;
 
-  --dzis: #B23A2E;
+  /* Kolory czynności — cztery kategorie, więc cztery odrębne odcienie.
+     Rampa --chart-1..5 z wklejki jest sekwencyjna (same teale), nadaje się
+     do natężenia jednej wielkości, a nie do rozróżniania czynności: pasma
+     zlałyby się w jeden kolor. Przyciągamy je za to chromą i jasnością
+     do nowej palety, a przesadzanie dostaje wprost kolor wiodący. */
+  --a-oslona:  oklch(0.47 0.13 295);
+  --a-wprost:  oklch(0.5 0.13 141);
+  --a-przesad: oklch(0.511 0.096 186.391);
+  --a-zbior:   oklch(0.55 0.106 70);
+  --a-oslona-t:  oklch(0.955 0.022 295);
+  --a-wprost-t:  oklch(0.955 0.024 141);
+  --a-przesad-t: oklch(0.955 0.02 186.391);
+  --a-zbior-t:   oklch(0.957 0.025 75);
 
   --display: "Superclarendon", "Rockwell", "Bookman Old Style", Georgia, "Times New Roman", serif;
   --body: "Optima", "Avenir Next", "Gill Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
-  --accent: var(--leaf);
-  --accent-soft: var(--leaf-soft);
   --shell: 1240px;
   --nazwa-w: 186px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #13160F; --paper-2: #1B1F16; --paper-3: #232819;
-    --ink: #E9ECE1; --ink-2: #BCC2B0; --muted: #8B9380;
-    --rule: #2E3427; --rule-2: #3D4534;
-    --leaf: #93C57A; --leaf-soft: #212E1B;
-    --enamel: #7CB9D2; --enamel-soft: #152730;
-    --a-oslona: #B49AD4; --a-wprost: #93C57A; --a-przesad: #7CB9D2; --a-zbior: #DCAC52;
-    --a-oslona-t: #241D33; --a-wprost-t: #1D2A18; --a-przesad-t: #14262F; --a-zbior-t: #2C2413;
-    --dzis: #E8705F;
+    --paper:    oklch(0.145 0 0);
+    --paper-2:  oklch(0.205 0 0);
+    --paper-3:  oklch(0.269 0 0);
+    --ink:      oklch(0.985 0 0);
+    --ink-2:    oklch(0.805 0 0);
+    --muted:    oklch(0.708 0 0);
+    --rule:     oklch(1 0 0 / 12%);
+    --rule-2:   oklch(1 0 0 / 20%);
+
+    /* jaśniejszy teal z rampy — ciemny --primary (0.437) to kolor wypełnienia
+       przycisku, na tle 0.145 nie wystarcza dla tekstu */
+    --accent:      oklch(0.704 0.14 182.503);
+    --accent-soft: oklch(0.268 0.038 188);
+    --dzis:        oklch(0.704 0.191 22.216);
+
+    /* pasma mają ciemny napis (var(--paper)), więc tu muszą być jasne */
+    --a-oslona:  oklch(0.76 0.12 295);
+    --a-wprost:  oklch(0.79 0.16 141);
+    --a-przesad: oklch(0.75 0.11 186.391);
+    --a-zbior:   oklch(0.8 0.12 75);
+    --a-oslona-t:  oklch(0.285 0.05 295);
+    --a-wprost-t:  oklch(0.285 0.055 141);
+    --a-przesad-t: oklch(0.285 0.045 186.391);
+    --a-zbior-t:   oklch(0.285 0.045 75);
   }
 }
 :root[data-theme="dark"] {
-  --paper: #13160F; --paper-2: #1B1F16; --paper-3: #232819;
-  --ink: #E9ECE1; --ink-2: #BCC2B0; --muted: #8B9380;
-  --rule: #2E3427; --rule-2: #3D4534;
-  --leaf: #93C57A; --leaf-soft: #212E1B;
-  --enamel: #7CB9D2; --enamel-soft: #152730;
-  --a-oslona: #B49AD4; --a-wprost: #93C57A; --a-przesad: #7CB9D2; --a-zbior: #DCAC52;
-  --a-oslona-t: #241D33; --a-wprost-t: #1D2A18; --a-przesad-t: #14262F; --a-zbior-t: #2C2413;
-  --dzis: #E8705F;
+  --paper:    oklch(0.145 0 0);
+  --paper-2:  oklch(0.205 0 0);
+  --paper-3:  oklch(0.269 0 0);
+  --ink:      oklch(0.985 0 0);
+  --ink-2:    oklch(0.805 0 0);
+  --muted:    oklch(0.708 0 0);
+  --rule:     oklch(1 0 0 / 12%);
+  --rule-2:   oklch(1 0 0 / 20%);
+
+  /* jaśniejszy teal z rampy — ciemny --primary (0.437) to kolor wypełnienia
+     przycisku, na tle 0.145 nie wystarcza dla tekstu */
+  --accent:      oklch(0.704 0.14 182.503);
+  --accent-soft: oklch(0.268 0.038 188);
+  --dzis:        oklch(0.704 0.191 22.216);
+
+  /* pasma mają ciemny napis (var(--paper)), więc tu muszą być jasne */
+  --a-oslona:  oklch(0.76 0.12 295);
+  --a-wprost:  oklch(0.79 0.16 141);
+  --a-przesad: oklch(0.75 0.11 186.391);
+  --a-zbior:   oklch(0.8 0.12 75);
+  --a-oslona-t:  oklch(0.285 0.05 295);
+  --a-wprost-t:  oklch(0.285 0.055 141);
+  --a-przesad-t: oklch(0.285 0.045 186.391);
+  --a-zbior-t:   oklch(0.285 0.045 75);
 }
 
-body[data-mode="balkon"] { --accent: var(--enamel); --accent-soft: var(--enamel-soft); }
+/* ścieżkę rozróżnia podpis, nie barwa — paleta ma jeden odcień */
 
 * { box-sizing: border-box; }
 
@@ -95,7 +132,7 @@ body {
 h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; line-height: 1.15; margin: 0; text-wrap: balance; }
 p { margin: 0; }
 a { color: var(--accent); text-underline-offset: 3px; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius); }
 
 .shell { max-width: var(--shell); margin-inline: auto; padding-inline: 24px; }
 @media (max-width: 640px) { .shell { padding-inline: 14px; } }
@@ -128,7 +165,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .wroc {
   display: inline-flex; align-items: center; gap: 9px;
   font-size: 14.5px; text-decoration: none; color: var(--ink);
-  padding: 5px 4px; border-radius: 4px;
+  padding: 5px 4px; border-radius: var(--radius);
 }
 .wroc .wroc-txt { font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; }
 .wroc .wroc-ikona { flex: none; color: var(--accent); transition: transform .2s ease; }
@@ -145,7 +182,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 /* ---------- panel „co teraz” ---------- */
 .teraz { padding: 30px 0 6px; }
 .teraz-box {
-  border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-2);
+  border: 1px solid var(--rule); border-radius: var(--radius); background: var(--paper-2);
   padding: 22px 24px; display: flex; flex-direction: column; gap: 18px;
 }
 .teraz-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
@@ -155,7 +192,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .teraz-kol { display: flex; flex-direction: column; gap: 8px; }
 .teraz-kol h3 { font-size: 13px; font-family: var(--mono); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
 .teraz-kol ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-.teraz-kol li { font-size: 13.5px; padding: 3px 9px; border-radius: 100px; border: 1px solid currentColor; }
+.teraz-kol li { font-size: 13.5px; padding: 3px 9px; border-radius: var(--radius); border: 1px solid currentColor; }
 .teraz-kol .pusto { font-size: 13.5px; color: var(--muted); font-style: italic; }
 .k-oslona  { color: var(--a-oslona); }
 .k-wprost  { color: var(--a-wprost); }
@@ -182,13 +219,13 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
 .chip {
   font: inherit; font-size: 13px; background: none; border: 1px solid var(--rule-2);
-  color: var(--ink-2); border-radius: 100px; padding: 4px 12px; cursor: pointer;
+  color: var(--ink-2); border-radius: var(--radius); padding: 4px 12px; cursor: pointer;
 }
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 .chip:hover:not([aria-pressed="true"]) { border-color: var(--accent); color: var(--accent); }
 
 .szukaj {
-  font: inherit; font-size: 13.5px; padding: 5px 12px; border-radius: 100px;
+  font: inherit; font-size: 13.5px; padding: 5px 12px; border-radius: var(--radius);
   border: 1px solid var(--rule-2); background: var(--paper-2); color: var(--ink);
   min-width: 170px;
 }
@@ -196,11 +233,11 @@ a { color: var(--accent); text-underline-offset: 3px; }
 /* ---------- legenda ---------- */
 .legenda { display: flex; gap: 16px; flex-wrap: wrap; padding: 14px 0 0; }
 .leg { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-2); }
-.leg i { width: 22px; height: 9px; border-radius: 2px; display: block; }
+.leg i { width: 22px; height: 9px; border-radius: var(--radius); display: block; }
 
 /* ---------- kalendarz ---------- */
 .kal-wrap {
-  margin-top: 16px; border: 1px solid var(--rule); border-radius: 4px;
+  margin-top: 16px; border: 1px solid var(--rule); border-radius: var(--radius);
   background: var(--paper-2); overflow-x: auto; overflow-y: visible;
 }
 .kal { min-width: 940px; }
@@ -256,7 +293,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
   position: relative; height: 11px; margin: 2px 0;
 }
 .bar {
-  position: absolute; top: 0; height: 11px; border-radius: 2px;
+  position: absolute; top: 0; height: 11px; border-radius: var(--radius);
   display: flex; align-items: center; padding-inline: 5px; overflow: hidden;
   font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.04em;
   text-transform: uppercase; white-space: nowrap; color: var(--paper);
@@ -274,7 +311,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
   cursor: help;
 }
 .znacznik.szac { background: transparent; border-style: dashed; }
-.znacznik.z-zbior { border-radius: 1px; transform: rotate(45deg); }
+.znacznik.z-zbior { border-radius: var(--radius); transform: rotate(45deg); }
 
 .detal {
   grid-column: 1 / -1; padding: 4px 16px 16px calc(var(--nazwa-w) + 12px);
@@ -298,7 +335,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
      minimalna jest szersza niż kontener i formularz wypycha stronę */
   grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   gap: 12px;
-  align-items: end; border: 1px solid var(--rule); border-radius: 4px;
+  align-items: end; border: 1px solid var(--rule); border-radius: var(--radius);
   background: var(--paper-2); padding: 18px 20px;
 }
 .pole-szerokie { grid-column: span 2; }
@@ -308,11 +345,11 @@ a { color: var(--accent); text-underline-offset: 3px; }
 .pole { display: flex; flex-direction: column; gap: 5px; }
 .pole label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); }
 .pole input, .pole select, .pole textarea {
-  font: inherit; font-size: 14px; padding: 7px 10px; border-radius: 3px;
+  font: inherit; font-size: 14px; padding: 7px 10px; border-radius: var(--radius);
   border: 1px solid var(--rule-2); background: var(--paper); color: var(--ink);
 }
 .przycisk {
-  font: inherit; font-size: 14px; padding: 8px 18px; border-radius: 3px; cursor: pointer;
+  font: inherit; font-size: 14px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer;
   background: var(--accent); border: 1px solid var(--accent); color: var(--paper);
 }
 .przycisk.wtorny { background: none; color: var(--ink-2); border-color: var(--rule-2); }
@@ -325,7 +362,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 }
 .wpis .w-data { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .wpis .w-tresc strong { font-weight: 600; }
-.wpis .w-czyn { font-family: var(--mono); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; margin-right: 6px; }
+.wpis .w-czyn { font-family: var(--mono); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; padding: 2px 7px; border-radius: var(--radius); margin-right: 6px; }
 .wpis .w-szac { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
 .wpis .w-usun { font: inherit; font-size: 12.5px; background: none; border: 0; color: var(--muted); cursor: pointer; text-decoration: underline; padding: 0; }
 .wpis .w-usun:hover { color: var(--dzis); }
@@ -419,7 +456,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
   max-width: min(440px, calc(100vw - 28px));
   padding: 12px 14px 12px 18px;
   /* nie 100px: przy dwóch wierszach tekstu pastylka wygląda jak balon */
-  border-radius: 20px;
+  border-radius: var(--radius, 0);
   font-size: 14.5px;
   line-height: 1.35;
   color: var(--ink);
@@ -442,7 +479,7 @@ body[data-app-pasek="tak"] .fab {
   font-size: 13.5px;
   white-space: nowrap;
   cursor: pointer;
-  border-radius: 100px;
+  border-radius: var(--radius, 0);
   padding: 7px 14px;
   min-height: 40px;
   border: 1px solid var(--accent);
@@ -458,15 +495,19 @@ body[data-app-pasek="tak"] .fab {
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .app-pasek { background: var(--paper-2); }
 }
-/* w trybie aplikacji nie ma paska adresu — oddajemy ten margines treści */
+/* Stan domyślny MUSI być poza media query — inaczej w zwykłej karcie
+   przeglądarki nic tego paska nie ukrywa i widać go zawsze. */
+.app-offline {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 95;
+  text-align: center;
+  padding: 5px 10px calc(5px + env(safe-area-inset-top));
+  font-size: 12.5px; letter-spacing: 0.02em;
+  background: var(--amber, #96671A); color: var(--paper);
+}
+/* pokazujemy tylko w trybie aplikacji, gdzie nie ma paska adresu
+   informującego o braku sieci */
 @media (display-mode: standalone) {
-  .app-offline {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 95;
-    display: none; text-align: center;
-    padding: 5px 10px calc(5px + env(safe-area-inset-top));
-    font-size: 12.5px; letter-spacing: 0.02em;
-    background: var(--amber, #96671A); color: var(--paper);
-  }
   body[data-siec="offline"] .app-offline { display: block; }
 }
 </style>

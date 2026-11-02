@@ -1,9 +1,9 @@
 /* Service worker aplikacji „Ogród od zera”.
-   Plik jest generowany przez build.py — cc055ef66e99 podmieniana jest na skrót
+   Plik jest generowany przez build.py — 90e644dbc3cb podmieniana jest na skrót
    z treści zbudowanych stron, żeby każda realna zmiana unieważniła cache.
    Nie edytuj sw.js w katalogu głównym; źródłem jest src/sw.js. */
 
-const WERSJA = "cc055ef66e99";
+const WERSJA = "90e644dbc3cb";
 const CACHE = `ogrod-${WERSJA}`;
 
 /* Powłoka aplikacji — wszystko, co musi działać bez sieci. */

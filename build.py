@@ -72,7 +72,7 @@ SZABLON = """<!doctype html>
   max-width: min(440px, calc(100vw - 28px));
   padding: 12px 14px 12px 18px;
   /* nie 100px: przy dwóch wierszach tekstu pastylka wygląda jak balon */
-  border-radius: 20px;
+  border-radius: var(--radius, 0);
   font-size: 14.5px;
   line-height: 1.35;
   color: var(--ink);
@@ -95,7 +95,7 @@ body[data-app-pasek="tak"] .fab {{
   font-size: 13.5px;
   white-space: nowrap;
   cursor: pointer;
-  border-radius: 100px;
+  border-radius: var(--radius, 0);
   padding: 7px 14px;
   min-height: 40px;
   border: 1px solid var(--accent);
@@ -111,15 +111,19 @@ body[data-app-pasek="tak"] .fab {{
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {{
   .app-pasek {{ background: var(--paper-2); }}
 }}
-/* w trybie aplikacji nie ma paska adresu — oddajemy ten margines treści */
+/* Stan domyślny MUSI być poza media query — inaczej w zwykłej karcie
+   przeglądarki nic tego paska nie ukrywa i widać go zawsze. */
+.app-offline {{
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 95;
+  text-align: center;
+  padding: 5px 10px calc(5px + env(safe-area-inset-top));
+  font-size: 12.5px; letter-spacing: 0.02em;
+  background: var(--amber, #96671A); color: var(--paper);
+}}
+/* pokazujemy tylko w trybie aplikacji, gdzie nie ma paska adresu
+   informującego o braku sieci */
 @media (display-mode: standalone) {{
-  .app-offline {{
-    position: fixed; top: 0; left: 0; right: 0; z-index: 95;
-    display: none; text-align: center;
-    padding: 5px 10px calc(5px + env(safe-area-inset-top));
-    font-size: 12.5px; letter-spacing: 0.02em;
-    background: var(--amber, #96671A); color: var(--paper);
-  }}
   body[data-siec="offline"] .app-offline {{ display: block; }}
 }}
 </style>
